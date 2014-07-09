@@ -7,3 +7,12 @@
 *.cmx
 *.cmxs
 *.cmxa
+.chamo*
+autom4te.cache
+config.log
+config.status
+master.Makefile
+ocaml_config.sh
+src/META
+src/server/ann_config.ml
+
