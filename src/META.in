@@ -1,0 +1,7 @@
+version = "@VERSION@"
+description = "Annoting the web"
+requires = "rdf,opium"
+archive(byte) = "annots.cma"
+archive(native) = "annots.cmxa"
+archive(native,plugin) = "annots.cmxs"
+
