@@ -25,11 +25,11 @@
 include ../master.Makefile
 
 OF_FLAGS=-package $(PACKAGES)
-INCLUDES=-I server
+INCLUDES=-I server `$(OCAMLFIND) query -i-format opium`
 
-COMPFLAGS=$(INCLUDES) -thread -g $(MT_FLAGS) #-annot
+COMPFLAGS=$(INCLUDES) -annot -thread -g $(MT_FLAGS) #-annot
 
-LINKFLAGS=$(INCLUDES)
+LINKFLAGS=$(INCLUDES) `$(OCAMLFIND) query opium`/opium.cmxa
 
 # The executables and libraries to produce
 LIB_ANNOTS=annots.cmxa
@@ -67,10 +67,10 @@ $(LIB_ANNOTS_BYTE): $(LIB_ANNOTS_CMIFILES) $(LIB_ANNOTS_CMOFILES)
 	$(OCAMLFIND) ocamlc -a -linkall -o $@ $(LIB_ANNOTS_CMOFILES)
 
 $(ANNOTS_SERVER): $(LIB_ANNOTS) server/ann_server.cmx
-	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -linkpkg -o $@ -linkall $(COMPFLAGS) $^
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -linkpkg -o $@ -linkall $(LINKFLAGS) $^
 
 $(ANNOTS_SERVER_BYTE): $(LIB_ANNOTS_BYTE) server/ann_server.cmo
-	$(OCAMLFIND) ocamlc $(OF_FLAGS) -linkpkg -o $@ -linkall $(COMPFLAGS) $^
+	$(OCAMLFIND) ocamlc $(OF_FLAGS) -linkpkg -o $@ -linkall $(LINKFLAGS) $^
 
 # Documentation :
 #################
