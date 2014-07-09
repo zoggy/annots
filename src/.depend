@@ -1,0 +1,9 @@
+server/ann_config.cmo : server/ann_config.cmi
+server/ann_config.cmx : server/ann_config.cmi
+server/ann_misc.cmo :
+server/ann_misc.cmx :
+server/ann_server.cmo :
+server/ann_server.cmx :
+server/ann_types.cmo :
+server/ann_types.cmx :
+server/ann_config.cmi :

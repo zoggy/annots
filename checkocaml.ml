@@ -1,5 +1,5 @@
 (*********************************************************************************)
-(*                Annots                                                         *)
+(*                Eris-publish                                                   *)
 (*                                                                               *)
 (*    Copyright (C) 2014 Institut National de Recherche en Informatique          *)
 (*    et en Automatique. All rights reserved.                                    *)
@@ -896,6 +896,8 @@ let _ = !print "\n### checking required tools and libraries ###\n"
 
 let _ = check_ocamlfind_package conf ~min_version: [0;8;2] "opium";;
 let _ = check_ocamlfind_package conf ~min_version: [0;8;0] "rdf";;
+let _ = check_ocamlfind_package conf ~min_version: [1;2] "config-file";;
+let _ = check_ocamlfind_package conf ~min_version: [1;1;8] "yojson";;
 
 let _ = !print "\n###\n"
 

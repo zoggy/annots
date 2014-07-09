@@ -1,5 +1,5 @@
 #################################################################################
-#                Annots                                                         #
+#                Eris-publish                                                   #
 #                                                                               #
 #    Copyright (C) 2014 Institut National de Recherche en Informatique          #
 #    et en Automatique. All rights reserved.                                    #
@@ -71,7 +71,7 @@ AC_SUBST(PACKAGE)
 AC_SUBST(PACKAGES)
 
 ANNOTS_PACKAGES=$PACKAGE
-PACKAGES=rdf,opium,yojson
+PACKAGES=rdf,opium_rock,config-file,yojson
 
 # Finally create the master.Makefile.in
 ACFILES="master.Makefile src/META src/server/ann_config.ml"
