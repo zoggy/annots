@@ -25,11 +25,11 @@
 include ../master.Makefile
 
 OF_FLAGS=-package $(PACKAGES)
-INCLUDES=-I server `$(OCAMLFIND) query -i-format opium`
+INCLUDES=-I server
 
 COMPFLAGS=$(INCLUDES) -annot -thread -g $(MT_FLAGS) #-annot
 
-LINKFLAGS=$(INCLUDES) `$(OCAMLFIND) query opium`/opium.cmxa
+LINKFLAGS=$(INCLUDES)
 
 # The executables and libraries to produce
 LIB_ANNOTS=annots.cmxa
@@ -45,13 +45,22 @@ ANNOTS_SERVER_BYTE=$(ANNOTS_SERVER).byte
 LIB_ANNOTS_CMOFILES= \
 	server/ann_config.cmo \
 	server/ann_types.cmo \
-	server/ann_misc.cmo
+	server/ann_misc.cmo \
+	server/ann_dbbase.cmo
 
 LIB_ANNOTS_CMIFILES= $(LIB_ANNOTS_CMOFILES:.cmo=.cmi)
 LIB_ANNOTS_CMXFILES= $(LIB_ANNOTS_CMOFILES:.cmo=.cmx)
 
 ANNOTS_LIBS=$(LIB_ANNOTS) $(LIB_ANNOTS_CMXS)
 ANNOTS_LIBS_BYTE=$(LIB_ANNOTS_BYTE)
+
+SERVER_CMOFILES= \
+	server/ann_token.cmo \
+	server/ann_server.cmo
+
+SERVER_CMIFILES= $(SERVER_CMOFILES:.cmo=.cmi)
+SERVER_CMXFILES= $(SERVER_CMOFILES:.cmo=.cmx)
+
 
 all: opt byte
 opt: $(ANNOTS_LIBS) $(ANNOTS_SERVER)
@@ -66,11 +75,11 @@ $(LIB_ANNOTS_CMXS): $(LIB_ANNOTS_CMIFILES) $(LIB_ANNOTS_CMXFILES)
 $(LIB_ANNOTS_BYTE): $(LIB_ANNOTS_CMIFILES) $(LIB_ANNOTS_CMOFILES)
 	$(OCAMLFIND) ocamlc -a -linkall -o $@ $(LIB_ANNOTS_CMOFILES)
 
-$(ANNOTS_SERVER): $(LIB_ANNOTS) server/ann_server.cmx
-	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -linkpkg -o $@ -linkall $(LINKFLAGS) $^
+$(ANNOTS_SERVER): $(LIB_ANNOTS) $(SERVER_CMXFILES)
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
 
-$(ANNOTS_SERVER_BYTE): $(LIB_ANNOTS_BYTE) server/ann_server.cmo
-	$(OCAMLFIND) ocamlc $(OF_FLAGS) -linkpkg -o $@ -linkall $(LINKFLAGS) $^
+$(ANNOTS_SERVER_BYTE): $(LIB_ANNOTS_BYTE) $(SERVER_CMOFILES)
+	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
 
 # Documentation :
 #################

@@ -1,0 +1,332 @@
+<db>
+  <tables>
+    <table logged="false">
+      <name>users</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>id</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+          <spec_options db="MySQL">
+            <spec_option>AUTO_INCREMENT</spec_option>
+          </spec_options>
+        </column>
+        <column nullable="false">
+          <name>login</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>40</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>email</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>80</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="true">
+          <name>home</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>255</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>right_key</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>name</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>80</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>firstname</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>80</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+      </columns>
+      <pkey>
+        <columnref>id</columnref>
+      </pkey>
+    </table>
+    <table logged="false">
+      <name>groups</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>id</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+          <spec_options db="MySQL">
+            <spec_option>AUTO_INCREMENT</spec_option>
+          </spec_options>
+        </column>
+        <column nullable="false">
+          <name>name</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>255</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>descr</name>
+          <comment></comment>
+          <type>
+            <name>TEXT</name>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>right_key</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+      </columns>
+      <pkey>
+        <columnref>id</columnref>
+      </pkey>
+    </table>
+    <table logged="false">
+      <name>group_users</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>id_user</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>id_group</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>roles</name>
+          <comment></comment>
+          <type>
+            <name>VARCHAR</name>
+            <dispsize>20</dispsize>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+      </columns>
+    </table>
+    <table logged="false">
+      <name>pubkeys</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>key</name>
+          <comment></comment>
+          <type>
+            <name>TEXT</name>
+          </type>
+          <ocaml_type>string</ocaml_type>
+          <sql2ml>Sql.sql2str</sql2ml>
+          <ml2sql>Sql.str2sql</ml2sql>
+        </column>
+        <column nullable="true">
+          <name>id_user</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>right_key</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+      </columns>
+    </table>
+    <table logged="false">
+      <name>annots</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>id</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+          <spec_options db="MySQL">
+            <spec_option>AUTO_INCREMENT</spec_option>
+          </spec_options>
+        </column>
+        <column nullable="false">
+          <name>date</name>
+          <comment></comment>
+          <type>
+            <name>FLOAT</name>
+            <options></options>
+          </type>
+          <ocaml_type>float</ocaml_type>
+          <sql2ml>Sql.sql2float</sql2ml>
+          <ml2sql>Sql.float2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>id_user</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+      </columns>
+      <pkey>
+        <columnref>id</columnref>
+      </pkey>
+    </table>
+    <table logged="false">
+      <name>annot_readers</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>id_annot</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+        <column nullable="false">
+          <name>right_key</name>
+          <comment>Key allowed to read the annotation. 0 means public annotation.</comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+        </column>
+      </columns>
+    </table>
+  </tables>
+  <vtables/>
+  <indexes>
+    <index unique="false">
+      <name>index_by_group</name>
+      <tableref>group_users</tableref>
+      <columnref>id_group</columnref>
+    </index>
+    <index unique="false">
+      <name>index_by_user</name>
+      <tableref>group_users</tableref>
+      <columnref>id_user</columnref>
+    </index>
+    <index unique="true">
+      <name>index_by_login</name>
+      <tableref>users</tableref>
+      <columnref>login</columnref>
+    </index>
+    <index unique="false">
+      <name>index_key_by_user</name>
+      <tableref>pubkeys</tableref>
+      <columnref>id_user</columnref>
+    </index>
+    <index unique="false">
+      <name>index_readers_by_annot</name>
+      <tableref>annot_readers</tableref>
+      <columnref>id_annot</columnref>
+    </index>
+    <index unique="false">
+      <name>index_annots_by_key</name>
+      <tableref>annot_readers</tableref>
+      <columnref>right_key</columnref>
+    </index>
+  </indexes>
+  <queries/>
+</db>

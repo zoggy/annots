@@ -22,3 +22,16 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+
+(** *)
+
+module Ordered_int = struct
+    type t = int
+    let compare (a : int) (b : int) = a - b
+  end
+module Int_set = Set.Make(Ordered_int)
+module Str_map = Map.Make(String)
+
+type right_key = int
+let public_right_key = 0
+module Right_key_set = Int_set

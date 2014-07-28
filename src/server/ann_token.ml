@@ -22,18 +22,17 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+
 (** *)
 
-open Core.Std
-open Async.Std
-open Opium.Std
+open Ann_types
 
-let hello =
-  get "/"
-  (fun req -> `String "Hello World" |> respond')
+type token_id = string
 
-let () =
-  App.empty
-  |> hello
-  |> App.command
-  |> Command.run
+type token = {
+  token_exp_date : float option ;
+  token_rights : Right_key_set.t ;
+  }
+
+
+let tokens = ref (Str_map.empty : token Str_map.t);;

@@ -22,18 +22,12 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** *)
+(** Base types *)
 
-open Core.Std
-open Async.Std
-open Opium.Std
+module Ordered_int : Map.OrderedType with type t = int
+module Int_set : Set.S with type elt = int
+module Str_map : Map.S with type key = string
 
-let hello =
-  get "/"
-  (fun req -> `String "Hello World" |> respond')
-
-let () =
-  App.empty
-  |> hello
-  |> App.command
-  |> Command.run
+type right_key
+val public_right_key : right_key
+module Right_key_set : Set.S with type elt = right_key
