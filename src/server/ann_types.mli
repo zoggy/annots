@@ -31,3 +31,8 @@ module Str_map : Map.S with type key = string
 type right_key
 val public_right_key : right_key
 module Right_key_set : Set.S with type elt = right_key
+
+val right_key_of_int : int -> right_key
+val int_of_right_key : right_key -> int
+val sql2right_key : (string -> int) -> string -> right_key
+val right_key2sql : (int -> string) -> right_key -> string

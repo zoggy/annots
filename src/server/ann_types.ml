@@ -35,3 +35,7 @@ module Str_map = Map.Make(String)
 type right_key = int
 let public_right_key = 0
 module Right_key_set = Int_set
+let right_key_of_int x = x
+let int_of_right_key x = x
+let sql2right_key f x = right_key_of_int (f x)
+let right_key2sql f x = f (int_of_right_key x)

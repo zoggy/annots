@@ -58,9 +58,9 @@
             <name>INT</name>
             <options></options>
           </type>
-          <ocaml_type>int</ocaml_type>
-          <sql2ml>Sql.sql2int</sql2ml>
-          <ml2sql>Sql.int2sql</ml2sql>
+          <ocaml_type>Ann_types.right_key</ocaml_type>
+          <sql2ml>Ann_types.sql2right_key Sql.sql2int</sql2ml>
+          <ml2sql>Ann_types.right_key2sql Sql.int2sql</ml2sql>
         </column>
         <column nullable="false">
           <name>name</name>
@@ -135,9 +135,9 @@
             <name>INT</name>
             <options></options>
           </type>
-          <ocaml_type>int</ocaml_type>
-          <sql2ml>Sql.sql2int</sql2ml>
-          <ml2sql>Sql.int2sql</ml2sql>
+          <ocaml_type>Ann_types.right_key</ocaml_type>
+          <sql2ml>Ann_types.sql2right_key Sql.sql2int</sql2ml>
+          <ml2sql>Ann_types.right_key2sql Sql.int2sql</ml2sql>
         </column>
       </columns>
       <pkey>
@@ -215,9 +215,9 @@
             <name>INT</name>
             <options></options>
           </type>
-          <ocaml_type>int</ocaml_type>
-          <sql2ml>Sql.sql2int</sql2ml>
-          <ml2sql>Sql.int2sql</ml2sql>
+          <ocaml_type>Ann_types.right_key</ocaml_type>
+          <sql2ml>Ann_types.sql2right_key Sql.sql2int</sql2ml>
+          <ml2sql>Ann_types.right_key2sql Sql.int2sql</ml2sql>
         </column>
       </columns>
     </table>
@@ -288,9 +288,9 @@
             <name>INT</name>
             <options></options>
           </type>
-          <ocaml_type>int</ocaml_type>
-          <sql2ml>Sql.sql2int</sql2ml>
-          <ml2sql>Sql.int2sql</ml2sql>
+          <ocaml_type>Ann_types.right_key</ocaml_type>
+          <sql2ml>Ann_types.sql2right_key Sql.sql2int</sql2ml>
+          <ml2sql>Ann_types.right_key2sql Sql.int2sql</ml2sql>
         </column>
       </columns>
     </table>

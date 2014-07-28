@@ -124,10 +124,13 @@ dep.ps:dep.dot
 
 distclean: clean
 
+GENERATED_FILES=server/ann_db_base.ml server/ann_db.mli
+
 clean:: dummy
 	$(RM) *~ \#*\# *.cm* *.a *.o *.annot
 	(cd server && $(RM) *~ \#*\# *.cm* *.a *.o *.annot)
 	$(RM) dump.odoc
+	$(RM) $(GENERATED_FILES)
 
 .depend depend:
 	$(RM) .depend
