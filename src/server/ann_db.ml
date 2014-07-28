@@ -32,6 +32,16 @@ module Make (D : Dbf_sql_driver.SqlDriver) =
     module Groups = Ann_db_base.Groups(D)
     module Pubkeys = Ann_db_base.Pubkeys(D)
     module Users = Ann_db_base.Users(D)
+
+    let init db =
+      Annot_readers.create db ;
+      Annots.create db ;
+      Group_users.create db ;
+      Groups.create db ;
+      Pubkeys.create db ;
+      Users.create db
+
+    let connect = D.connect
   end
 
 include Make(Dbf_mysql.MysqlDriver)
