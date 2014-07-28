@@ -46,7 +46,8 @@ LIB_ANNOTS_CMOFILES= \
 	server/ann_config.cmo \
 	server/ann_types.cmo \
 	server/ann_misc.cmo \
-	server/ann_db_base.cmo
+	server/ann_db_base.cmo \
+	server/ann_db.cmo
 
 LIB_ANNOTS_CMIFILES= $(LIB_ANNOTS_CMOFILES:.cmo=.cmi)
 LIB_ANNOTS_CMXFILES= $(LIB_ANNOTS_CMOFILES:.cmo=.cmx)
@@ -153,4 +154,6 @@ uninstall: dummy
 server/ann_db_base.ml: server/ann_db_base.xml
 	$(DBFORGE) $< > $@
 
+server/ann_db.mli: server/ann_db.ml
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) $(INCLUDES) -thread -i $< > $@
 
