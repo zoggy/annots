@@ -61,6 +61,7 @@ AC_SUBST(OCAMLLIB)
 AC_SUBST(OCAMLBIN)
 AC_SUBST(OCAMLDOC)
 AC_SUBST(OCAMLFIND)
+AC_SUBST(DBFORGE)
 AC_SUBST(EXEC_PREFIX)
 AC_SUBST(ROOT)
 AC_SUBST(USER)
@@ -71,7 +72,7 @@ AC_SUBST(PACKAGE)
 AC_SUBST(PACKAGES)
 
 ANNOTS_PACKAGES=$PACKAGE
-PACKAGES=rdf,config-file,yojson,opium
+PACKAGES=rdf,config-file,yojson,dbforge.mysql,cohttp.async,core,async,cow,humane_re #opium
 
 # Finally create the master.Makefile.in
 ACFILES="master.Makefile src/META src/server/ann_config.ml"

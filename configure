@@ -592,6 +592,7 @@ GROUP
 USER
 ROOT
 EXEC_PREFIX
+DBFORGE
 OCAMLFIND
 OCAMLDOC
 OCAMLBIN
@@ -1725,8 +1726,9 @@ fi
 
 
 
+
 ANNOTS_PACKAGES=$PACKAGE
-PACKAGES=rdf,config-file,yojson,opium
+PACKAGES=rdf,config-file,yojson,dbforge.mysql,cohttp.async,core,async,cow,humane_re #opium
 
 # Finally create the master.Makefile.in
 ACFILES="master.Makefile src/META src/server/ann_config.ml"

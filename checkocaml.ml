@@ -895,9 +895,13 @@ let _ = !print "\n### checking required tools and libraries ###\n"
 
 
 let _ = check_ocamlfind_package conf ~min_version: [0;8;2] "opium";;
+let _ = check_ocamlfind_package conf ~min_version: [0;8;2] "dbforge.mysql";;
 let _ = check_ocamlfind_package conf ~min_version: [0;8;0] "rdf";;
 let _ = check_ocamlfind_package conf ~min_version: [1;2] "config-file";;
 let _ = check_ocamlfind_package conf ~min_version: [1;1;8] "yojson";;
+let _ =
+  let path = ocaml_prog "dbforge" in
+  add_subst "DBFORGE" path
 
 let _ = !print "\n###\n"
 
