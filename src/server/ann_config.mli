@@ -22,3 +22,18 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+(** Access to genet main configuration file. *)
+
+type t = {
+  db_name : string;
+  db_user : string;
+  db_passwd : string;
+  db_host : string;
+  db_port : int option ;
+  root_iri : Rdf_iri.iri ;
+  root_dir : string ;
+}
+val read_config : string -> t
+val string_of_config : t -> string
+
+

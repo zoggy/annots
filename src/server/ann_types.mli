@@ -36,3 +36,6 @@ val right_key_of_int : int -> right_key
 val int_of_right_key : right_key -> int
 val sql2right_key : (string -> int) -> string -> right_key
 val right_key2sql : (int -> string) -> right_key -> string
+
+val sql2iri : (string -> string) -> string -> Rdf_iri.iri
+val iri2sql : (string -> string) -> Rdf_iri.iri -> string

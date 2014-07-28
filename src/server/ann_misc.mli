@@ -22,23 +22,12 @@
 (*                                                                               *)
 (*********************************************************************************)
 
+(** Utilities. *)
 
-(** *)
-
-module Ordered_int = struct
-    type t = int
-    let compare (a : int) (b : int) = a - b
-  end
-module Int_set = Set.Make(Ordered_int)
-module Str_map = Map.Make(String)
-
-type right_key = int
-let public_right_key = 0
-module Right_key_set = Int_set
-let right_key_of_int x = x
-let int_of_right_key x = x
-let sql2right_key f x = right_key_of_int (f x)
-let right_key2sql f x = f (int_of_right_key x)
-
-let iri2sql f x = f (Rdf_iri.string x)
-let sql2iri f x = Rdf_iri.iri (f x)
+(*i==v=[String.strip_string]=1.0====*)
+(** [strip_string s] removes all leading and trailing spaces from the given string.
+@@author Maxence Guesdon
+@@version 1.0
+@@cgname String.strip_string*)
+val strip_string : string -> string
+(*/i==v=[String.strip_string]=1.0====*)

@@ -75,11 +75,11 @@ ANNOTS_PACKAGES=$PACKAGE
 PACKAGES=rdf,config-file,yojson,dbforge.mysql,cohttp.async,core,async,cow,humane_re #opium
 
 # Finally create the master.Makefile.in
-ACFILES="master.Makefile src/META src/server/ann_config.ml"
+ACFILES="master.Makefile src/META src/server/ann_install.ml"
 AC_OUTPUT($ACFILES)
 chmod a-w master.Makefile
 chmod a-w src/META
-chmod a-w src/server/ann_config.ml
+chmod a-w src/server/ann_install.ml
 
 
 cat << EOF

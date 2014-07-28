@@ -41,7 +41,10 @@ module Make (D : Dbf_sql_driver.SqlDriver) =
       Pubkeys.create db ;
       Users.create db
 
-    let connect = D.connect
+    let connect ~host ?port ~database ~user ~password () =
+      try D.connect ~host ?port ~database ~user ~password ()
+      with Dbf_sql_driver.Sql_error msg ->
+        failwith msg
   end
 
 include Make(Dbf_mysql.MysqlDriver)

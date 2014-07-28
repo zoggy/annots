@@ -261,6 +261,16 @@
           <sql2ml>Sql.sql2int</sql2ml>
           <ml2sql>Sql.int2sql</ml2sql>
         </column>
+        <column nullable="false">
+          <name>iri</name>
+          <comment></comment>
+          <type>
+            <name>TEXT</name>
+          </type>
+          <ocaml_type>Rdf_iri.iri</ocaml_type>
+          <sql2ml>Ann_types.sql2iri Sql.sql2str</sql2ml>
+          <ml2sql>Ann_types.iri2sql Sql.str2sql</ml2sql>
+        </column>
       </columns>
       <pkey>
         <columnref>id</columnref>
@@ -326,6 +336,11 @@
       <name>index_annots_by_key</name>
       <tableref>annot_readers</tableref>
       <columnref>right_key</columnref>
+    </index>
+    <index unique="false">
+      <name>index_annots_by_iri</name>
+      <tableref>annots</tableref>
+      <columnref>iri</columnref>
     </index>
   </indexes>
   <queries/>

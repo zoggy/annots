@@ -1,0 +1,8 @@
+db = {
+  name = annots
+  user = annots
+  host = localhost
+  password = ""
+}
+(* do not forget ending / *)
+root_iri = "http://localhost:8082/"

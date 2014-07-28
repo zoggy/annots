@@ -43,9 +43,10 @@ ANNOTS_SERVER_BYTE=$(ANNOTS_SERVER).byte
 #############
 
 LIB_ANNOTS_CMOFILES= \
-	server/ann_config.cmo \
+	server/ann_install.cmo \
 	server/ann_types.cmo \
 	server/ann_misc.cmo \
+	server/ann_config.cmo \
 	server/ann_db_base.cmo \
 	server/ann_db.cmo
 
@@ -61,7 +62,6 @@ SERVER_CMOFILES= \
 
 SERVER_CMIFILES= $(SERVER_CMOFILES:.cmo=.cmi)
 SERVER_CMXFILES= $(SERVER_CMOFILES:.cmo=.cmx)
-
 
 all: opt byte
 opt: $(ANNOTS_LIBS) $(ANNOTS_SERVER)

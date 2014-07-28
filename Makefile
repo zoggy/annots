@@ -42,7 +42,7 @@ doc: dummy
 # myself
 
 master.Makefile: master.Makefile.in config.status \
-	src/server/ann_config.ml.in \
+	src/server/ann_install.ml.in \
 	src/META.in
 	./config.status
 
@@ -58,7 +58,7 @@ configure: configure.in
 distclean: clean
 	cd src && $(MAKE) distclean
 	$(RM) config.cache config.log config.status master.Makefile \
-	src/server/ann_config.ml src/META
+	src/server/ann_install.ml src/META
 
 clean:: dummy
 	$(RM) *~ \#*\#

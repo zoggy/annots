@@ -32,8 +32,37 @@ let hello =
   get "/"
   (fun req -> `String "Hello World" |> respond')
 
+
+let init config_file () =
+  try
+    let cfg = Ann_config.read_config config_file in
+    let db = Ann_config.(
+       Ann_db.connect ~host:cfg.db_host ~user: cfg.db_user
+         ~password: cfg.db_passwd ?port: cfg.db_port
+         ~database: cfg.db_name ()
+      )
+    in
+    Ann_db.init db
+  with
+    Failure msg ->
+      Pervasives.prerr_endline msg;
+      Pervasives.exit 1
+;;
+
 let () =
   App.empty
   |> hello
-  |> App.command
-  |> Command.run
+  |> fun app ->
+    let server = App.command app in
+    let init = Command.basic
+      ~summary: "Initialize database from the given config file"
+      Command.Spec.(
+        empty +>
+        anon ("config-file" %: file)
+      )
+      init
+    in
+    let main = Command.group "Web annotation server"
+      [ "server", server ; "init", init ]
+    in
+    Command.run ~version: Ann_install.version main
