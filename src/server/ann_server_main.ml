@@ -30,7 +30,7 @@ let config_file = ref "config.txt"
 
 let options =
   Arg.align
-    [ "--init", Arg.Unit (fun () -> mode := Init), " Init database" ;
+    [ "--init", Arg.Unit (fun () -> mode := Init), " init database" ;
       "-c", Arg.String ((:=) config_file), "file read configuration from file; default is "^ !config_file ;
     ]
 
@@ -51,7 +51,7 @@ let init config_file =
       exit 1
 ;;
 
-let usage = Printf.sprintf "Usage: %s [options]\nwhere options are:" Sys.argv.(0);;
+let usage = Printf.sprintf "Usage: %s [options]\nwhere options are:" (Filename.basename Sys.argv.(0));;
 
 let main () =
   Arg.parse options (fun _ -> failwith (Arg.usage_string options usage)) usage;
