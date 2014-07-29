@@ -24,4 +24,52 @@
 
 (** *)
 
-let serve cfg db = ()
+type mode = Init | Server
+let mode = ref Server
+let config_file = ref "config.txt"
+
+let options =
+  Arg.align
+    [ "--init", Arg.Unit (fun () -> mode := Init), " Init database" ;
+      "-c", Arg.String ((:=) config_file), "file read configuration from file; default is "^ !config_file ;
+    ]
+
+let connect cfg =  Ann_config.(
+   Ann_db.connect ~host:cfg.db_host ~user: cfg.db_user
+     ~password: cfg.db_passwd ?port: cfg.db_port
+     ~database: cfg.db_name ()
+  )
+
+let init config_file =
+  try
+    let cfg = Ann_config.read_config config_file in
+    let db = connect cfg in
+    Ann_db.init db
+  with
+    Failure msg ->
+      prerr_endline msg;
+      exit 1
+;;
+
+let usage = Printf.sprintf "Usage: %s [options]\nwhere options are:" Sys.argv.(0);;
+
+let main () =
+  Arg.parse options (fun _ -> failwith (Arg.usage_string options usage)) usage;
+  match !mode with
+    Init -> init !config_file
+  | Server ->
+      let cfg = Ann_config.read_config !config_file in
+      let db = connect cfg in
+      Ann_server.serve cfg db
+
+(*c==v=[Misc.safe_main]=1.0====*)
+let safe_main main =
+  try main ()
+  with
+    Failure s
+  | Sys_error s ->
+      prerr_endline s;
+      exit 1
+(*/c==v=[Misc.safe_main]=1.0====*)
+
+let () = safe_main main

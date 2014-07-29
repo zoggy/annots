@@ -58,7 +58,8 @@ ANNOTS_LIBS_BYTE=$(LIB_ANNOTS_BYTE)
 
 SERVER_CMOFILES= \
 	server/ann_token.cmo \
-	server/ann_server.cmo
+	server/ann_server.cmo \
+	server/ann_server_main.cmo
 
 SERVER_CMIFILES= $(SERVER_CMOFILES:.cmo=.cmi)
 SERVER_CMXFILES= $(SERVER_CMOFILES:.cmo=.cmx)
