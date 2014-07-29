@@ -24,8 +24,11 @@
 
 (** *)
 
+let () = Dbf_mysql.debug_printer := prerr_endline ;;
+
 module Make (D : Dbf_sql_driver.SqlDriver) =
   struct
+
     module Annot_readers = Ann_db_base.Annot_readers(D)
     module Annots = Ann_db_base.Annots(D)
     module Group_users = Ann_db_base.Group_users(D)
@@ -33,13 +36,23 @@ module Make (D : Dbf_sql_driver.SqlDriver) =
     module Pubkeys = Ann_db_base.Pubkeys(D)
     module Users = Ann_db_base.Users(D)
 
+    let set_charset db table =
+      let q = "ALTER TABLE "^table^" CONVERT TO CHARACTER SET utf8;" in
+      ignore(D.exec db q)
+
     let init db =
-      Annot_readers.create db ;
-      Annots.create db ;
-      Group_users.create db ;
-      Groups.create db ;
-      Pubkeys.create db ;
-      Users.create db
+      try
+        Annot_readers.create db ;
+        Annots.create db ;
+        Group_users.create db ;
+        Groups.create db ;
+        Pubkeys.create db ;
+        Users.create db ;
+        List.iter (set_charset db)
+          [ "annot_readers" ; "annots" ; "group_users" ; "groups" ;
+            "pubkeys" ; "users" ]
+      with Dbf_sql_driver.Sql_error msg ->
+          failwith msg
 
     let connect ~host ?port ~database ~user ~password () =
       try D.connect ~host ?port ~database ~user ~password ()

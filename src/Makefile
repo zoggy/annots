@@ -25,11 +25,11 @@
 include ../master.Makefile
 
 OF_FLAGS=-package $(PACKAGES)
-INCLUDES=-I server `$(OCAMLFIND) query -i-format opium opium_rock`
+INCLUDES=-I server
 
 COMPFLAGS=$(INCLUDES) -annot -thread -g $(MT_FLAGS) #-annot
 
-LINKFLAGS=$(INCLUDES) `$(OCAMLFIND) query opium`/opium.cmxa
+LINKFLAGS=$(INCLUDES)
 
 # The executables and libraries to produce
 LIB_ANNOTS=annots.cmxa
@@ -153,6 +153,9 @@ uninstall: dummy
 ###########################
 # additional dependencies
 ###########################
+
+$(SERVER_CMOFILES): $(LIB_ANNOTS_BYTE)
+$(SERVER_CMXFILES): $(LIB_ANNOTS)
 
 server/ann_db_base.ml: server/ann_db_base.xml
 	$(DBFORGE) $< > $@

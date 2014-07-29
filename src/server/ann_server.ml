@@ -24,16 +24,18 @@
 
 (** *)
 
-open Core.Std
-open Async.Std
-open Opium.Std
+type mode = Init | Server
+let mode = ref Server
+let config_file = ref "config.txt"
 
-let hello =
-  get "/"
-  (fun req -> `String "Hello World" |> respond')
+let options =
+  Arg.align
+    [ "--init", Arg.Unit (fun () -> mode := Init), " Init database" ;
+      "-c", Arg.String ((:=) config_file), "file read configuration from file; default is "^ !config_file ;
+    ]
 
 
-let init config_file () =
+let init config_file =
   try
     let cfg = Ann_config.read_config config_file in
     let db = Ann_config.(
@@ -45,24 +47,26 @@ let init config_file () =
     Ann_db.init db
   with
     Failure msg ->
-      Pervasives.prerr_endline msg;
-      Pervasives.exit 1
+      prerr_endline msg;
+      exit 1
 ;;
 
-let () =
-  App.empty
-  |> hello
-  |> fun app ->
-    let server = App.command app in
-    let init = Command.basic
-      ~summary: "Initialize database from the given config file"
-      Command.Spec.(
-        empty +>
-        anon ("config-file" %: file)
-      )
-      init
-    in
-    let main = Command.group "Web annotation server"
-      [ "server", server ; "init", init ]
-    in
-    Command.run ~version: Ann_install.version main
+let usage = Printf.sprintf "Usage: %s [options]\nwhere options are:" Sys.argv.(0);;
+
+let main () =
+  Arg.parse options (fun _ -> failwith (Arg.usage_string options usage)) usage;
+  match !mode with
+    Init -> init !config_file
+  | Server -> ()
+
+(*c==v=[Misc.safe_main]=1.0====*)
+let safe_main main =
+  try main ()
+  with
+    Failure s
+  | Sys_error s ->
+      prerr_endline s;
+      exit 1
+(*/c==v=[Misc.safe_main]=1.0====*)
+
+let () = safe_main main

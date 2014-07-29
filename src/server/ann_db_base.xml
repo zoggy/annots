@@ -188,7 +188,7 @@
       <comment></comment>
       <columns>
         <column nullable="false">
-          <name>key</name>
+          <name>pubkey</name>
           <comment></comment>
           <type>
             <name>TEXT</name>
@@ -262,14 +262,16 @@
           <ml2sql>Sql.int2sql</ml2sql>
         </column>
         <column nullable="false">
-          <name>iri</name>
+          <name>id_iri</name>
           <comment></comment>
           <type>
-            <name>TEXT</name>
+            <name>INT</name>
+            <dispsize>1</dispsize>
+            <options></options>
           </type>
-          <ocaml_type>Rdf_iri.iri</ocaml_type>
-          <sql2ml>Ann_types.sql2iri Sql.sql2str</sql2ml>
-          <ml2sql>Ann_types.iri2sql Sql.str2sql</ml2sql>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
         </column>
       </columns>
       <pkey>
@@ -303,6 +305,39 @@
           <ml2sql>Ann_types.right_key2sql Sql.int2sql</ml2sql>
         </column>
       </columns>
+    </table>
+    <table logged="false">
+      <name>iris</name>
+      <comment></comment>
+      <columns>
+        <column nullable="false">
+          <name>id</name>
+          <comment></comment>
+          <type>
+            <name>INT</name>
+            <options></options>
+          </type>
+          <ocaml_type>int</ocaml_type>
+          <sql2ml>Sql.sql2int</sql2ml>
+          <ml2sql>Sql.int2sql</ml2sql>
+          <spec_options db="MySQL">
+            <spec_option>AUTO_INCREMENT</spec_option>
+          </spec_options>
+        </column>
+        <column nullable="false">
+          <name>iri</name>
+          <comment></comment>
+          <type>
+            <name>TEXT</name>
+          </type>
+          <ocaml_type>Rdf_iri.iri</ocaml_type>
+          <sql2ml>Ann_types.sql2iri Sql.sql2str</sql2ml>
+          <ml2sql>Ann_types.iri2sql Sql.str2sql</ml2sql>
+        </column>
+      </columns>
+      <pkey>
+        <columnref>id</columnref>
+      </pkey>
     </table>
   </tables>
   <vtables/>
@@ -340,7 +375,7 @@
     <index unique="false">
       <name>index_annots_by_iri</name>
       <tableref>annots</tableref>
-      <columnref>iri</columnref>
+      <columnref>id_iri</columnref>
     </index>
   </indexes>
   <queries/>
