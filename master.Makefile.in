@@ -48,6 +48,8 @@ DVIPDF=dvipdf
 BIBTEX=bibtex
 MENHIR=@MENHIR@
 
+DATADIR=@DATADIR@
+
 # For installation
 ##############
 MKDIR=mkdir -p
@@ -63,9 +65,6 @@ VERSION=@VERSION@
 PACKAGE=@PACKAGE@
 
 PACKAGES=@PACKAGES@
-
-STOG_SESSION=eris-stog-session
-STOG_SESSION_BYTE=$(STOG_SESSION).byte
 
 # generic rules :
 #################

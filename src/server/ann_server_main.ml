@@ -34,7 +34,7 @@ let options =
       "-c", Arg.String ((:=) config_file), "file read configuration from file; default is "^ !config_file ;
     ]
 
-let connect cfg =  Ann_config.(
+let connect cfg = Ann_config.(
    Ann_db.connect ~host:cfg.db_host ~user: cfg.db_user
      ~password: cfg.db_passwd ?port: cfg.db_port
      ~database: cfg.db_name ()

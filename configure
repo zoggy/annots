@@ -584,6 +584,7 @@ PACKAGE_URL=
 ac_unique_file="master.Makefile.in"
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+DATADIR
 PACKAGES
 PACKAGE
 VERSION
@@ -1704,6 +1705,8 @@ if test "$datadir" = "\${prefix}/share" ; then
         datadir=$prefix/share
 fi
 
+DATADIR=$datadir
+
 #############################
 # substitutions to perform
 
@@ -1727,8 +1730,9 @@ fi
 
 
 
+
 ANNOTS_PACKAGES=$PACKAGE
-PACKAGES=rdf,config-file,yojson,dbforge.mysql,http
+PACKAGES=rdf,config-file,yojson,dbforge.mysql,http,xtmpl
 
 # Finally create the master.Makefile.in
 ACFILES="master.Makefile src/META src/server/ann_install.ml"

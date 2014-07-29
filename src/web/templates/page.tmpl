@@ -1,0 +1,20 @@
+<html>
+<head>
+<title><site-title/> : <window-title/></title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="&lt;site-url/&gt;style.css"></link>
+<morehead/>
+</head><body onLoad="onPageLoad()">
+<div id="page">
+<!--<include file="menubar.tmpl"/>-->
+<div id="header">
+<div id="navpath"> <navpath/></div>
+<div class="page-title"><page-title/></div>
+</div>
+<!--<aside>><include file="sidebar.tmpl"/></aside>-->
+<if error=""><main_/><div class="alert alert-error"><error/></div></if>
+<contents/>
+</div>
+<footer id="bottombar">
+</footer>
+</body>
+</html>

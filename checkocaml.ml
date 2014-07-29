@@ -899,6 +899,7 @@ let _ = check_ocamlfind_package conf ~min_version: [0;8;2] "dbforge.mysql";;
 let _ = check_ocamlfind_package conf ~min_version: [0;8;0] "rdf";;
 let _ = check_ocamlfind_package conf ~min_version: [1;2] "config-file";;
 let _ = check_ocamlfind_package conf ~min_version: [1;1;8] "yojson";;
+let _ = check_ocamlfind_package conf ~min_version: [0;9] "xtmpl";;
 let _ =
   let path = ocaml_prog "dbforge" in
   add_subst "DBFORGE" path

@@ -25,6 +25,7 @@
 (** Access to genet main configuration file. *)
 
 type t = {
+  site_title : string ;
   db_name : string;
   db_user : string;
   db_passwd : string;

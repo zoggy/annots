@@ -73,3 +73,38 @@ let split_string ?(keep_empty=false) s chars =
   in
   iter "" 0
 (*/c==v=[String.split_string]=1.2====*)
+
+(*c==v=[File.string_of_file]=1.0====*)
+let string_of_file name =
+  let chanin = open_in_bin name in
+  let len = 1024 in
+  let s = String.create len in
+  let buf = Buffer.create len in
+  let rec iter () =
+    try
+      let n = input chanin s 0 len in
+      if n = 0 then
+        ()
+      else
+        (
+         Buffer.add_substring buf s 0 n;
+         iter ()
+        )
+    with
+      End_of_file -> ()
+  in
+  iter ();
+  close_in chanin;
+  Buffer.contents buf
+(*/c==v=[File.string_of_file]=1.0====*)
+
+let rec find_in_dirs dirs file =
+  match dirs with
+    [] -> failwith (Printf.sprintf "Not_found: %S" file)
+  | d :: q ->
+      let f = Filename.concat d file in
+      if Sys.file_exists f then
+        f
+      else
+        find_in_dirs q file
+

@@ -48,6 +48,8 @@ if test "$datadir" = "\${prefix}/share" ; then
         datadir=$prefix/share
 fi
 
+DATADIR=$datadir
+
 #############################
 # substitutions to perform
 AC_SUBST(OCAMLC)
@@ -70,9 +72,10 @@ AC_SUBST(OCAMLFIND_PATH)
 AC_SUBST(VERSION)
 AC_SUBST(PACKAGE)
 AC_SUBST(PACKAGES)
+AC_SUBST(DATADIR)
 
 ANNOTS_PACKAGES=$PACKAGE
-PACKAGES=rdf,config-file,yojson,dbforge.mysql,http
+PACKAGES=rdf,config-file,yojson,dbforge.mysql,http,xtmpl
 
 # Finally create the master.Makefile.in
 ACFILES="master.Makefile src/META src/server/ann_install.ml"

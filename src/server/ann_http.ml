@@ -22,36 +22,46 @@
 (*                                                                               *)
 (*********************************************************************************)
 
-(** Utilities. *)
+(** *)
 
-(*i==v=[String.strip_string]=1.0====*)
-(** [strip_string s] removes all leading and trailing spaces from the given string.
-@@author Maxence Guesdon
-@@version 1.0
-@@cgname String.strip_string*)
-val strip_string : string -> string
-(*/i==v=[String.strip_string]=1.0====*)
+let web_dir cfg = Filename.concat cfg.Ann_config.root_dir "web"
+let webtmpl_dir cfg = Filename.concat (web_dir cfg) "templates"
+let webfiles_dir cfg = Filename.concat (web_dir cfg) "files"
 
-(*i==v=[String.split_string]=1.2====*)
-(** Separate the given string according to the given list of characters.
-@@author Maxence Guesdon
-@@version 1.2
-@@param keep_empty is [false] by default. If set to [true],
-   the empty strings between separators are kept.
-@@cgname String.split_string*)
-val split_string : ?keep_empty:bool -> string -> char list -> string list
-(*/i==v=[String.split_string]=1.2====*)
+type result = { code : int ; body : string * string }
+
+let mime_text = "text/plain"
+let mime_html = "text/html"
+let mime_javascript = "application/javascript"
+let mime_css = "text/css"
+let mime_svg = "image/svg+xml"
+
+let result_not_found url = { code = 404 ; body = (url, mime_text) }
+let result_forbidden url = { code = 403 ; body = (url, mime_text) }
+let result ?(code=200) ?(mime=mime_html) contents =
+  { code ; body = (contents, mime) }
+
+let result_page ?code ?mime xmls = result ?code ?mime (Xtmpl.string_of_xmls xmls)
+
+let file_extension s =
+  try
+    let p = String.rindex s '.' in
+    String.sub s (p + 1) (String.length s - (p+1))
+  with _ -> ""
+
+let file_mime_types =
+  [ ".css", mime_css ;
+    ".js", mime_javascript ;
+    ".svg", mime_svg ;
+  ]
+let file_mime_type file =
+  try List.assoc (file_extension file) file_mime_types
+  with Not_found -> mime_text
 
 
-(*i==v=[File.string_of_file]=1.0====*)
-(** [string_of_file filename] returns the content of [filename]
-   in the form of one string.
-@@author Maxence Guesdon
-@@version 1.0
-@@raise Sys_error if the file could not be opened.
-@@cgname File.string_of_file*)
-val string_of_file : string -> string
-(*/i==v=[File.string_of_file]=1.0====*)
+let result_file file =
+  let contents = Ann_misc.string_of_file file in
+  let mime = file_mime_type file in
+  result ~mime contents
 
-(** @raise Failure if the file is not found in any of the given directories. *)
-val find_in_dirs : string list -> string -> string
+     

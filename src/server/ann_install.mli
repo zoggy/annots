@@ -25,3 +25,8 @@
 (** Installation configuration. *)
 
 val version : string
+
+val share_dir : string
+val web_dir : string
+val webtmpl_dir : string
+val webfiles_dir : string

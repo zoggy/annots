@@ -27,7 +27,7 @@ include ../master.Makefile
 OF_FLAGS=-package $(PACKAGES)
 INCLUDES=-I server
 
-COMPFLAGS=$(INCLUDES) -annot -thread -g $(MT_FLAGS) #-annot
+COMPFLAGS=$(INCLUDES) -annot -rectypes -thread -g $(MT_FLAGS) #-annot
 
 LINKFLAGS=$(INCLUDES)
 
@@ -58,6 +58,8 @@ ANNOTS_LIBS_BYTE=$(LIB_ANNOTS_BYTE)
 
 SERVER_CMOFILES= \
 	server/ann_token.cmo \
+	server/ann_http.cmo \
+	server/ann_xpage.cmo \
 	server/ann_server.cmo \
 	server/ann_server_main.cmo
 
@@ -164,5 +166,5 @@ server/ann_db_base.ml: server/ann_db_base.xml
 	$(DBFORGE) $< > $@
 
 server/ann_db.mli: server/ann_db.ml
-	$(OCAMLFIND) ocamlopt $(OF_FLAGS) $(INCLUDES) -thread -i $< > $@
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) $(COMPFLAGS) $(INCLUDES) -thread -i $< > $@
 

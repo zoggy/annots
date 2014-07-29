@@ -28,6 +28,7 @@ module CF = Config_file
 
 type t =
   {
+    site_title : string ;
     db_name : string ;
     db_user : string ;
     db_passwd : string ;
@@ -39,6 +40,7 @@ type t =
 
 let read_config file =
   let group = new CF.group in
+  let sitetitle_cp = new CF.string_cp ~group ["site_title"] "Annots" "" in
   let dbname_cp = new CF.string_cp ~group ["db"; "name"] "annots" "" in
   let dbuser_cp = new CF.string_cp ~group ["db"; "user"] "annots" "" in
   let dbhost_cp = new CF.string_cp ~group ["db"; "host"] "localhost" "" in
@@ -64,6 +66,7 @@ let read_config file =
       with _ -> failwith ("Invalid port: "^s)
   in
   {
+    site_title = sitetitle_cp#get ;
     db_name = dbname_cp#get ;
     db_user = dbuser_cp#get ;
     db_host = dbhost_cp#get ;
