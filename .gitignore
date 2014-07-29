@@ -14,6 +14,5 @@ config.status
 master.Makefile
 ocaml_config.sh
 src/META
-src/server/ann_config.ml
 annots
 annots.byte

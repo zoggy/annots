@@ -77,11 +77,13 @@ $(LIB_ANNOTS_CMXS): $(LIB_ANNOTS_CMIFILES) $(LIB_ANNOTS_CMXFILES)
 $(LIB_ANNOTS_BYTE): $(LIB_ANNOTS_CMIFILES) $(LIB_ANNOTS_CMOFILES)
 	$(OCAMLFIND) ocamlc -a -linkall -o $@ $(LIB_ANNOTS_CMOFILES)
 
-$(ANNOTS_SERVER): $(LIB_ANNOTS) $(SERVER_CMXFILES)
-	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
+$(ANNOTS_SERVER): $(LIB_ANNOTS) $(SERVER_CMIFILES) $(SERVER_CMXFILES)
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) \
+	$(LIB_ANNOTS) $(SERVER_CMXFILES)
 
-$(ANNOTS_SERVER_BYTE): $(LIB_ANNOTS_BYTE) $(SERVER_CMOFILES)
-	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
+$(ANNOTS_SERVER_BYTE): $(LIB_ANNOTS_BYTE) $(SERVER_CMIFILES) $(SERVER_CMOFILES)
+	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) \
+	$(LIB_ANNOTS_BYTE) $(SERVER_CMOFILES)
 
 # Documentation :
 #################
@@ -135,7 +137,7 @@ clean:: dummy
 
 .depend depend:
 	$(RM) .depend
-	$(OCAMLFIND) ocamldep server/*.ml server/*.mli > .depend
+	$(OCAMLFIND) ocamldep -I server server/*.ml server/*.mli > .depend
 
 dummy:
 

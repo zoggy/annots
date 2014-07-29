@@ -1,21 +1,28 @@
-server/ann_config.cmo : server/ann_config.cmi
-server/ann_config.cmx : server/ann_config.cmi
-server/ann_db.cmo : server/ann_db.cmi
-server/ann_db.cmx : server/ann_db.cmi
-server/ann_db_base.cmo :
-server/ann_db_base.cmx :
+server/ann_config.cmo : server/ann_misc.cmi server/ann_config.cmi
+server/ann_config.cmx : server/ann_misc.cmx server/ann_config.cmi
+server/ann_db.cmo : server/ann_db_base.cmo server/ann_db.cmi
+server/ann_db.cmx : server/ann_db_base.cmx server/ann_db.cmi
+server/ann_db_base.cmo : server/ann_types.cmi
+server/ann_db_base.cmx : server/ann_types.cmx
 server/ann_install.cmo : server/ann_install.cmi
 server/ann_install.cmx : server/ann_install.cmi
 server/ann_misc.cmo : server/ann_misc.cmi
 server/ann_misc.cmx : server/ann_misc.cmi
-server/ann_server.cmo :
-server/ann_server.cmx :
-server/ann_token.cmo :
-server/ann_token.cmx :
+server/ann_server.cmo : server/ann_misc.cmi server/ann_config.cmi \
+    server/ann_server.cmi
+server/ann_server.cmx : server/ann_misc.cmx server/ann_config.cmx \
+    server/ann_server.cmi
+server/ann_server_main.cmo : server/ann_server.cmi server/ann_db.cmi \
+    server/ann_config.cmi
+server/ann_server_main.cmx : server/ann_server.cmx server/ann_db.cmx \
+    server/ann_config.cmx
+server/ann_token.cmo : server/ann_types.cmi
+server/ann_token.cmx : server/ann_types.cmx
 server/ann_types.cmo : server/ann_types.cmi
 server/ann_types.cmx : server/ann_types.cmi
 server/ann_config.cmi :
-server/ann_db.cmi :
+server/ann_db.cmi : server/ann_types.cmi server/ann_db_base.cmo
 server/ann_install.cmi :
 server/ann_misc.cmi :
+server/ann_server.cmi : server/ann_config.cmi
 server/ann_types.cmi :
