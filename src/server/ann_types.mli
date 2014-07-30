@@ -26,6 +26,7 @@
 
 module Ordered_int : Map.OrderedType with type t = int
 module Int_set : Set.S with type elt = int
+module Int_map : Map.S with type key = int
 module Str_map : Map.S with type key = string
 
 type right_key

@@ -26,13 +26,16 @@
 
 open Ann_config
 
-let route_annots cfg db = function
+let route_annots cfg db req = function
   _ -> Ann_http.result "not implemented yet"
 
-let route_users cfg db = function
+let route_users cfg db req = function
   _ -> Ann_http.result "not implemented yet"
 
-let route_file cfg db path =
+let route_auth cfg db req = function
+  _ -> Ann_auth.auth cfg db req
+
+let route_file cfg db req path =
   (* forbid using ".." in path, to prevent access to
      files out of webfiles directories *)
   let path = List.filter ((<>) Filename.parent_dir_name) path in
@@ -45,11 +48,14 @@ let route_file cfg db path =
   try Ann_http.result_file (Ann_misc.find_in_dirs dirs file)
   with _ -> Ann_http.result_not_found "No service here."
 
-let route cfg db = function
-  "annots" :: q -> route_annots cfg db q
-| "users" :: q -> route_users cfg db q
+
+
+let route cfg db req = function
+  "annots" :: q -> route_annots cfg db req q
+| "users" :: q -> route_users cfg db req q
+| "auth" :: q -> route_auth cfg db req q
 | [] -> Ann_xpage.welcome_page cfg db
-| path -> route_file cfg db path
+| path -> route_file cfg db req path
 
 let get_useful_path =
   let rec iter = function
@@ -72,7 +78,7 @@ let callback cfg db req ouch =
   let result =
     match get_useful_path root_path path with
       None -> Ann_http.result_not_found req#path
-    | Some p -> route cfg db p
+    | Some p -> route cfg db req p
   in
   send_result result ouch
 

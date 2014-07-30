@@ -24,47 +24,12 @@
 
 (** *)
 
-let web_dir cfg = Filename.concat cfg.Ann_config.root_dir "web"
-let webtmpl_dir cfg = Filename.concat (web_dir cfg) "templates"
-let webfiles_dir cfg = Filename.concat (web_dir cfg) "files"
+module J = Yojson.Safe
 
-type result = { code : int ; body : string * string }
+let auth_json cfg db req json =
+  Ann_http.result ~mime: Ann_http.mime_text "json ok"
 
-let mime_text = "text/plain"
-let mime_html = "text/html"
-let mime_javascript = "application/javascript"
-let mime_css = "text/css"
-let mime_svg = "image/svg+xml"
-let mime_json = "application/json"
-
-let result_not_found url = { code = 404 ; body = (url, mime_text) }
-let result_forbidden url = { code = 403 ; body = (url, mime_text) }
-let result_bad_request msg = { code = 400 ; body = (msg, mime_text) }
-let result ?(code=200) ?(mime=mime_html) contents =
-  { code ; body = (contents, mime) }
-
-let result_json ?code ?(mime=mime_json) json = result ?code ~mime (Yojson.Safe.to_string json)
-let result_page ?code ?mime xmls = result ?code ?mime (Xtmpl.string_of_xmls xmls)
-
-let file_extension s =
-  try
-    let p = String.rindex s '.' in
-    String.sub s (p + 1) (String.length s - (p+1))
-  with _ -> ""
-
-let file_mime_types =
-  [ ".css", mime_css ;
-    ".js", mime_javascript ;
-    ".svg", mime_svg ;
-  ]
-let file_mime_type file =
-  try List.assoc (file_extension file) file_mime_types
-  with Not_found -> mime_text
-
-
-let result_file file =
-  let contents = Ann_misc.string_of_file file in
-  let mime = file_mime_type file in
-  result ~mime contents
-
-     
+let auth cfg db req =
+  try auth_json cfg db req (J.from_string req#body)
+  with Yojson.Json_error msg ->
+    Ann_http.result_bad_request msg

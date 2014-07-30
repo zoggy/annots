@@ -30,6 +30,7 @@ module Ordered_int = struct
     let compare (a : int) (b : int) = a - b
   end
 module Int_set = Set.Make(Ordered_int)
+module Int_map = Map.Make(Ordered_int)
 module Str_map = Map.Make(String)
 
 type right_key = int
