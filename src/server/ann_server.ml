@@ -32,8 +32,7 @@ let route_annots cfg db req = function
 let route_users cfg db req = function
   _ -> Ann_http.result "not implemented yet"
 
-let route_auth cfg db req = function
-  _ -> Ann_auth.auth cfg db req
+let route_auth = Ann_auth.auth
 
 let route_file cfg db req path =
   (* forbid using ".." in path, to prevent access to

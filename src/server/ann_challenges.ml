@@ -29,6 +29,8 @@ open Ann_types
 let () = Random.self_init()
 let challenge_string_length = 40
 
+let key_kind_rsa = "rsa"
+
 type key =
   Rsa of Nocrypto.RSA.pub
 
