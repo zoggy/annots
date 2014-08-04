@@ -67,15 +67,15 @@ let past_cookie_date = "Wednesday, 09-Nov-99 23:12:40 GMT"
 
 let header_of_cookie_action = function
   Ann_http.Set_cookie (k, v) ->
-    ("Set-Cookie", Printf.sprintf "%s, Path=/" v)
+    ("Set-Cookie", Printf.sprintf "%s=%s, Path=/" k v)
 | Ann_http.Unset_cookie k ->
-    ("Set-Cookie", " , Path=/, Expires="^past_cookie_date)
+    ("Set-Cookie", Printf.sprintf "%s=, Path=/, Expires=%s" k past_cookie_date)
 
 let send_result res ouch =
   let (body, mime) = res.Ann_http.body in
   let cookies = List.map header_of_cookie_action res.Ann_http.cookie_actions in
   let code = `Code res.Ann_http.code in
-  let headers = [ "content-type", mime ] in
+  let headers = cookies @ [ "content-type", mime ] in
   Http_daemon.respond ~code ~body ~headers ouch
 
 let callback cfg db req ouch =
