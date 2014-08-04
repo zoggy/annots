@@ -1,4 +1,8 @@
 server/ann_db.mli
 server/ann_db_base.ml
 server/ann_install.ml
+gen_rsa_key
+gen_rsa_key.byte
+annots
+annots.byte
 

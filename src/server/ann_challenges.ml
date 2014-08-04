@@ -36,7 +36,7 @@ type key =
 
 type challenge = {
     data : string ;
-    key_id : int ;
+    right_key : Ann_types.right_key ;
   }
 
 (*c==v=[Misc.try_finalize]=1.0====*)
@@ -106,9 +106,9 @@ let random_string =
   let f _ = Char.chr (Random.int 255) in
   fun () -> String.map f s
 
-let create_challenge key_id key =
+let create_challenge right_key key =
   let data = random_string () in
-  let challenge = { data ; key_id } in
+  let challenge = { data ; right_key } in
   let challenge_id = C.add_challenge challenge in
   let enc_data = encrypt key data in
   (challenge_id, enc_data)

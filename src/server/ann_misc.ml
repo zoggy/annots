@@ -108,3 +108,7 @@ let rec find_in_dirs dirs file =
       else
         find_in_dirs q file
 
+let base64_of_string s =
+  Cstruct.to_string (Nocrypto.Base64.encode (Cstruct.of_string s))
+let string_of_base64 s =
+  Cstruct.to_string (Nocrypto.Base64.decode (Cstruct.of_string s))

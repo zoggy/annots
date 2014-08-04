@@ -60,6 +60,7 @@ SERVER_CMOFILES= \
 	server/ann_token.cmo \
 	server/ann_http.cmo \
 	server/ann_challenges.cmo \
+	server/ann_keys.cmo \
 	server/ann_auth.cmo \
 	server/ann_xpage.cmo \
 	server/ann_server.cmo \
@@ -68,9 +69,13 @@ SERVER_CMOFILES= \
 SERVER_CMIFILES= $(SERVER_CMOFILES:.cmo=.cmi)
 SERVER_CMXFILES= $(SERVER_CMOFILES:.cmo=.cmx)
 
+TOOLS=gen_rsa_key
+TOOLS_BYTE=gen_rsa_key.byte
+
 all: opt byte
-opt: $(ANNOTS_LIBS) $(ANNOTS_SERVER)
-byte: $(ANNOTS_LIBS_BYTE) $(ANNOTS_SERVER_BYTE)
+opt: $(ANNOTS_LIBS) $(ANNOTS_SERVER) $(TOOLS)
+byte: $(ANNOTS_LIBS_BYTE) $(ANNOTS_SERVER_BYTE) $(TOOLS_BYTE)
+tools: $(TOOLS) $(TOOLS_BYTE)
 
 $(LIB_ANNOTS): $(LIB_ANNOTS_CMIFILES) $(LIB_ANNOTS_CMXFILES)
 	$(OCAMLFIND) ocamlopt -a -linkall -o $@ $(LIB_ANNOTS_CMXFILES)
@@ -88,6 +93,15 @@ $(ANNOTS_SERVER): $(LIB_ANNOTS) $(SERVER_CMIFILES) $(SERVER_CMXFILES)
 $(ANNOTS_SERVER_BYTE): $(LIB_ANNOTS_BYTE) $(SERVER_CMIFILES) $(SERVER_CMOFILES)
 	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) \
 	$(LIB_ANNOTS_BYTE) $(SERVER_CMOFILES)
+
+
+gen_rsa_key: $(LIB_ANNOTS) tools/gen_rsa_key.cmx
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
+
+gen_rsa_key.byte: $(LIB_ANNOTS_BYTE) tools/gen_rsa_key.cmo
+	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
+
+.PHONY: tools
 
 # Documentation :
 #################

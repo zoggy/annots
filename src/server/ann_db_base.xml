@@ -219,7 +219,7 @@
           <sql2ml>Ann_types.sql2right_key Sql.sql2int</sql2ml>
           <ml2sql>Ann_types.right_key2sql Sql.int2sql</ml2sql>
         </column>
-        <column nullable="true">
+        <column nullable="false">
           <name>kind</name>
           <comment>Kind of key, always in lowercase. Example: rsa</comment>
           <type>
