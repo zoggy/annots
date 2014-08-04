@@ -112,3 +112,19 @@ let base64_of_string s =
   Cstruct.to_string (Nocrypto.Base64.encode (Cstruct.of_string s))
 let string_of_base64 s =
   Cstruct.to_string (Nocrypto.Base64.decode (Cstruct.of_string s))
+
+
+(*c==v=[Misc.try_finalize]=1.0====*)
+let try_finalize f x finally y =
+  let res =
+    try f x
+    with exn -> finally y; raise exn
+  in
+  finally y;
+  res
+(*/c==v=[Misc.try_finalize]=1.0====*)
+
+let random_string size =
+  let s = String.create size in
+  let f _ = Char.chr (Random.int 255) in
+  fun () -> String.map f s

@@ -29,6 +29,8 @@ module J = Yojson.Safe
 exception Bad_request of string
 let bad_request msg = raise (Bad_request msg)
 
+let token_cookie = "ANNOTS_TOKEN_ID"
+
 let json_field name l =
   try Some (List.assoc name l)
   with Not_found -> None
@@ -44,8 +46,33 @@ let mand_str_json_field name l =
   | Some (`String s) -> s
   | Some _ -> bad_request (Printf.sprintf "Expected a string in field %S" name)
 
-let auth_post_challenges cfg db req json =
-  Ann_http.result ~mime: Ann_http.mime_text "challenges not implemented yet"
+
+let rights_of_challenges acc (id, data) =
+  match Ann_challenges.check_challenge id data with
+    None -> acc
+  | Some c -> Ann_types.Right_key_set.add c.Ann_challenges.right_key acc
+
+let challenge_of_json acc = function
+  `Assoc l ->
+    begin
+      try
+        let challenge_id = int_of_string (mand_str_json_field "challenge_id" l) in
+        let data = mand_str_json_field "data" l in
+        (challenge_id, data) :: acc
+      with _ -> acc
+    end
+| _ -> acc
+
+let auth_post_challenges cfg db req = function
+  `List l ->
+    begin
+      let challenges = List.fold_left challenge_of_json [] l in
+      let rights = List.fold_left rights_of_challenges Ann_types.Right_key_set.empty challenges in
+      let token_id = Ann_token.add_token rights in
+      Ann_http.result_json ~cookie_actions: [Ann_http.Set_cookie (token_cookie, token_id)]
+        (`Assoc [(token_cookie, `String token_id)])
+    end
+| _ -> bad_request "List of challenge responses expected."
 
 let pubkey_of_json = function
   `Assoc l ->

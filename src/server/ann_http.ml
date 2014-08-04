@@ -28,7 +28,9 @@ let web_dir cfg = Filename.concat cfg.Ann_config.root_dir "web"
 let webtmpl_dir cfg = Filename.concat (web_dir cfg) "templates"
 let webfiles_dir cfg = Filename.concat (web_dir cfg) "files"
 
-type result = { code : int ; body : string * string }
+type cookie_action = Set_cookie of string * string | Unset_cookie of string
+
+type result = { code : int ; body : string * string ; cookie_actions : cookie_action list }
 
 let mime_text = "text/plain"
 let mime_html = "text/html"
@@ -37,14 +39,19 @@ let mime_css = "text/css"
 let mime_svg = "image/svg+xml"
 let mime_json = "application/json"
 
-let result_not_found url = { code = 404 ; body = (url, mime_text) }
-let result_forbidden url = { code = 403 ; body = (url, mime_text) }
-let result_bad_request msg = { code = 400 ; body = (msg, mime_text) }
-let result ?(code=200) ?(mime=mime_html) contents =
-  { code ; body = (contents, mime) }
+let result ?(code=200) ?(cookie_actions=[]) ?(mime=mime_html) contents =
+ { code ; body = (contents, mime_text) ; cookie_actions }
+let result_not_found url = result ~code: 404 ~mime: mime_text url
+let result_forbidden url = result ~code: 403 ~mime: mime_text url
+let result_bad_request msg = result ~code: 400 ~mime: mime_text msg
+let result ?(cookie_actions=[]) ?(code=200) ?(mime=mime_html) contents =
+  { code ; body = (contents, mime) ; cookie_actions }
 
-let result_json ?code ?(mime=mime_json) json = result ?code ~mime (Yojson.Safe.to_string json)
-let result_page ?code ?mime xmls = result ?code ?mime (Xtmpl.string_of_xmls xmls)
+let result_json ?code ?cookie_actions ?(mime=mime_json) json =
+  result ?code ~mime ?cookie_actions (Yojson.Safe.to_string json)
+
+let result_page ?code ?cookie_actions ?mime xmls =
+  result ?code ?cookie_actions ?mime (Xtmpl.string_of_xmls xmls)
 
 let file_extension s =
   try

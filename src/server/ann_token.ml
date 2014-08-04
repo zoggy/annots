@@ -34,5 +34,27 @@ type token = {
   token_rights : Right_key_set.t ;
   }
 
-
 let tokens = ref (Str_map.empty : token Str_map.t);;
+
+let random_string =
+  let f = Ann_misc.random_string 40 in
+  fun () -> Ann_misc.base64_of_string (f())
+
+let mutex = Mutex.create ()
+
+let on_mutex f x =
+  Mutex.lock mutex ;
+  Ann_misc.try_finalize
+    f x
+    Mutex.unlock mutex
+
+let do_add key t = tokens := Str_map.add key t !tokens
+let do_remove key = tokens := Str_map.remove key !tokens
+
+let add_token ?exp_date rights =
+  let s = random_string () in
+  on_mutex (do_add s)
+    { token_exp_date = exp_date ; token_rights = rights };
+  s
+
+let remove_token s = on_mutex do_remove s

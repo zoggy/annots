@@ -58,3 +58,15 @@ val find_in_dirs : string list -> string -> string
 
 val string_of_base64 : string -> string
 val base64_of_string : string -> string
+
+(*i==v=[Misc.try_finalize]=1.0====*)
+(** [try_finalize f x g y] applies [f] to [x] and return
+   the result or raises an exception, but in all cases
+   [g] is applied to [y] before returning or raising the exception.
+@@author Didier Remy
+@@version 1.0
+@@cgname Misc.try_finalize*)
+val try_finalize : ('a -> 'b) -> 'a -> ('c -> unit) -> 'c -> 'b
+(*/i==v=[Misc.try_finalize]=1.0====*)
+
+val random_string : int -> (unit -> string)

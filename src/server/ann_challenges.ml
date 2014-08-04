@@ -39,16 +39,6 @@ type challenge = {
     right_key : Ann_types.right_key ;
   }
 
-(*c==v=[Misc.try_finalize]=1.0====*)
-let try_finalize f x finally y =
-  let res =
-    try f x
-    with exn -> finally y; raise exn
-  in
-  finally y;
-  res
-(*/c==v=[Misc.try_finalize]=1.0====*)
-
 module C :
   sig
     type challenge_id = int
@@ -63,7 +53,7 @@ module C :
 
     let challenges = ref (Int_map.empty : challenge Int_map.t)
     let add_challenge c =
-      try_finalize
+      Ann_misc.try_finalize
         (fun () ->
           Mutex.lock mutex;
           let id = challenge_id () in
@@ -74,7 +64,7 @@ module C :
         Mutex.unlock mutex
 
     let check id data =
-      try_finalize
+      Ann_misc.try_finalize
         (fun () ->
           Mutex.lock mutex ;
           let res =
@@ -101,10 +91,7 @@ let rsa_encrypt key data =
 let encrypt = function
   Rsa key -> rsa_encrypt key
 
-let random_string =
-  let s = String.create challenge_string_length in
-  let f _ = Char.chr (Random.int 255) in
-  fun () -> String.map f s
+let random_string = Ann_misc.random_string challenge_string_length
 
 let create_challenge right_key key =
   let data = random_string () in

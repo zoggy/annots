@@ -47,8 +47,6 @@ let route_file cfg db req path =
   try Ann_http.result_file (Ann_misc.find_in_dirs dirs file)
   with _ -> Ann_http.result_not_found "No service here."
 
-
-
 let route cfg db req = function
   "annots" :: q -> route_annots cfg db req q
 | "users" :: q -> route_users cfg db req q
@@ -65,8 +63,17 @@ let get_useful_path =
   in
   fun root_path path -> iter (root_path, path)
 
+let past_cookie_date = "Wednesday, 09-Nov-99 23:12:40 GMT"
+
+let header_of_cookie_action = function
+  Ann_http.Set_cookie (k, v) ->
+    ("Set-Cookie", Printf.sprintf "%s, Path=/" v)
+| Ann_http.Unset_cookie k ->
+    ("Set-Cookie", " , Path=/, Expires="^past_cookie_date)
+
 let send_result res ouch =
   let (body, mime) = res.Ann_http.body in
+  let cookies = List.map header_of_cookie_action res.Ann_http.cookie_actions in
   let code = `Code res.Ann_http.code in
   let headers = [ "content-type", mime ] in
   Http_daemon.respond ~code ~body ~headers ouch
