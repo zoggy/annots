@@ -101,6 +101,12 @@ gen_rsa_key: $(LIB_ANNOTS) tools/gen_rsa_key.cmx
 gen_rsa_key.byte: $(LIB_ANNOTS_BYTE) tools/gen_rsa_key.cmo
 	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $^
 
+test_init: $(LIB_ANNOTS) tools/test_init.ml
+	$(OCAMLFIND) ocamlopt $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $(COMPFLAGS) -package curl $^
+
+test_init.byte: $(LIB_ANNOTS_BYTE) tools/test_init.ml
+	$(OCAMLFIND) ocamlc $(OF_FLAGS) -thread -linkpkg -o $@ -linkall $(LINKFLAGS) $(COMPFLAGS) -package curl $^
+
 .PHONY: tools
 
 # Documentation :

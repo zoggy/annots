@@ -26,15 +26,33 @@
 
 open Nocrypto.RSA
 
+let binary = ref None
+
 let () =
   let t  = Unix.gettimeofday () in
   let cs = Cstruct.create 8 in
   Cstruct.BE.set_uint64 cs 0 Int64.(of_float (t *. 1000.)) ;
   Nocrypto.Rng.reseed cs
 
+let options = [
+    "-b", Arg.String (fun s -> binary := Some s),
+    "<file> output marshalled OCaml value of type Nocrypto.RSA.priv)\n\tand exponent,modulus on stderr"]
+
+let () = Arg.parse options (fun _ -> ())
+  (Printf.sprintf "Usage: %s [options]\nwhere options are:" Sys.argv.(0))
+
 let k = Nocrypto.RSA.generate 1024
 
-let () = Printf.printf "e: %s
+let () =
+  match !binary with
+    Some file ->
+      let oc = open_out_bin file in
+      Marshal.to_channel oc k [] ;
+      close_out oc;
+      prerr_string (Printf.sprintf "%s,%s" (Z.to_string k.e) (Z.to_string k.n))
+
+  | None ->
+    Printf.printf "e: %s
 d: %s
 n: %s
 p: %s
@@ -43,11 +61,18 @@ dp: %s
 dq: %s
 q': %s
 "
-  (Z.to_string k.e)
-  (Z.to_string k.d)
-  (Z.to_string k.n)
-  (Z.to_string k.p)
-  (Z.to_string k.q)
-  (Z.to_string k.dp)
-  (Z.to_string k.dq)
-  (Z.to_string k.q')
+      (Z.to_string k.e)
+      (Z.to_string k.d)
+      (Z.to_string k.n)
+      (Z.to_string k.p)
+      (Z.to_string k.q)
+      (Z.to_string k.dp)
+      (Z.to_string k.dq)
+      (Z.to_string k.q')
+(*
+let s = Cstruct.to_string (Nocrypto.RSA.encrypt (Nocrypto.RSA.pub_of_priv k) (Cstruct.of_string "helloworld!"))
+let s = Ann_misc.base64_of_string s
+let s = Ann_misc.string_of_base64 s
+let s = Cstruct.to_string (Nocrypto.RSA.decrypt k (Cstruct.of_string s))
+let () = prerr_endline s
+*)

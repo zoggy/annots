@@ -46,20 +46,35 @@ let mand_str_json_field name l =
   | Some (`String s) -> s
   | Some _ -> bad_request (Printf.sprintf "Expected a string in field %S" name)
 
+let mand_int_json_field name l =
+  let j = mand_json_field name l in
+  match j with
+    `Int n -> n
+  | _ -> bad_request (Printf.sprintf "Expected an int in field %S" name)
 
 let rights_of_challenges acc (id, data) =
   match Ann_challenges.check_challenge id data with
-    None -> acc
-  | Some c -> Ann_types.Right_key_set.add c.Ann_challenges.right_key acc
+    None ->
+      prerr_endline (Printf.sprintf "challenge %d not passed" id);
+      acc
+  | Some c ->
+      prerr_endline (Printf.sprintf "challenge %d passed" id);
+      Ann_types.Right_key_set.add c.Ann_challenges.right_key acc
 
 let challenge_of_json acc = function
   `Assoc l ->
     begin
       try
-        let challenge_id = int_of_string (mand_str_json_field "challenge_id" l) in
-        let data = mand_str_json_field "data" l in
+        let challenge_id = mand_int_json_field "challenge_id" l in
+        let data = Ann_misc.string_of_base64 (mand_str_json_field "data" l) in
         (challenge_id, data) :: acc
-      with _ -> acc
+      with e ->
+          let msg = match e with
+              Bad_request msg -> msg
+            | _ -> Printexc.to_string e
+          in
+          prerr_endline msg;
+          acc
     end
 | _ -> acc
 
@@ -70,7 +85,10 @@ let auth_post_challenges cfg db req = function
       let rights = List.fold_left rights_of_challenges Ann_types.Right_key_set.empty challenges in
       let token_id = Ann_token.add_token rights in
       Ann_http.result_json ~cookie_actions: [Ann_http.Set_cookie (token_cookie, token_id)]
-        (`Assoc [(token_cookie, `String token_id)])
+        (`Assoc [
+           (token_cookie, `String token_id);
+           ("number_of_rights", `Int (Ann_types.Right_key_set.cardinal rights))
+         ])
     end
 | _ -> bad_request "List of challenge responses expected."
 
@@ -110,8 +128,10 @@ let challenge_of_pubkey db (id, res) =
               let (challenge_id, enc_data) =
                 Ann_challenges.create_challenge t.Ann_db.Pubkeys.right_key key
               in
+              let data = Ann_misc.base64_of_string enc_data in
+              prerr_endline ("sending enc_data="^data);
               [ "challenge_id", `Int challenge_id ;
-                "data", `String (Ann_misc.base64_of_string enc_data) ;
+                "data", `String data ;
               ]
         with
           e ->
@@ -132,12 +152,17 @@ let auth_get_challenges cfg db req json =
       Ann_http.result_json (`List challenges)
   | _ -> bad_request "List of public keys expected."
 
+let json_of_request req =
+  match req#header ~name: "content-type" with
+    "application/jsonrequest"
+  | "application/json" -> J.from_string req#body
+  | _ -> bad_request "Expected JSON data"
 
 let auth cfg db req path =
   try
     match path, req#meth with
-      ["pubkeys"], `POST -> auth_get_challenges cfg db req (J.from_string req#body)
-    | ["challenges"], `POST -> auth_post_challenges cfg db req (J.from_string req#body)
+      ["pubkeys"], `POST -> auth_get_challenges cfg db req (json_of_request req)
+    | ["challenges"], `POST -> auth_post_challenges cfg db req (json_of_request req)
     | _ -> Ann_http.result_not_found "No service here."
   with
     Yojson.Json_error msg

@@ -70,3 +70,14 @@ val try_finalize : ('a -> 'b) -> 'a -> ('c -> unit) -> 'c -> 'b
 (*/i==v=[Misc.try_finalize]=1.0====*)
 
 val random_string : int -> (unit -> string)
+
+(*i==v=[File.file_of_string]=1.1====*)
+(** [file_of_string ~file str] creates a file named
+   [filename] whose content is [str].
+@@author Fabrice Lefessant
+@@version 1.1
+@@raise Sys_error if the file could not be opened.
+@@cgname File.file_of_string*)
+val file_of_string : file:string -> string -> unit
+(*/i==v=[File.file_of_string]=1.1====*)
+

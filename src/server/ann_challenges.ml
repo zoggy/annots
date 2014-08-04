@@ -58,7 +58,6 @@ module C :
           Mutex.lock mutex;
           let id = challenge_id () in
           challenges := Int_map.add id c !challenges;
-          Mutex.unlock mutex;
           id
         ) ()
         Mutex.unlock mutex
@@ -71,13 +70,14 @@ module C :
             try
               let c = Int_map.find id !challenges in
               challenges := Int_map.remove id !challenges ;
+              prerr_endline (Printf.sprintf "c.data=%s\ndata=%s" c.data data);
+              prerr_endline (Printf.sprintf "len(c.data)=%d\nlen(data)=%d" (String.length c.data) (String.length data));
               if c.data = data then
                 Some c
               else
                 None
             with Not_found -> None
           in
-          Mutex.unlock mutex ;
           res
         ) ()
         Mutex.unlock mutex
