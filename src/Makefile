@@ -49,6 +49,7 @@ LIB_ANNOTS_CMOFILES= \
 	server/ann_config.cmo \
 	server/ann_db_base.cmo \
 	server/ann_db.cmo \
+	server/ann_keys.cmo \
 	server/ann_users.cmo \
 	server/ann_groups.cmo
 
@@ -63,7 +64,6 @@ SERVER_CMOFILES= \
 	server/ann_xpage.cmo \
 	server/ann_http.cmo \
 	server/ann_challenges.cmo \
-	server/ann_keys.cmo \
 	server/ann_auth.cmo \
 	server/ann_server_users.cmo \
 	server/ann_server.cmo \

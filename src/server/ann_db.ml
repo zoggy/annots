@@ -60,4 +60,5 @@ module Make (D : Dbf_sql_driver.SqlDriver) =
         failwith msg
   end
 
-include Make(Dbf_mysql.MysqlDriver)
+module Driver = Dbf_mysql.MysqlDriver
+include Make(Driver)

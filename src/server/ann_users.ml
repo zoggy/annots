@@ -54,7 +54,8 @@ let get db login =
 let add db ~name ~firstname ~login ~email ?home () =
   let f () =
     if login_exists db login then error (Login_exists login);
-    U.insert db ~name ~firstname ~login ~email ?home ();
+    let right_key = Ann_keys.new_right_key db in
+    U.insert db ~name ~firstname ~login ~email ?home ~right_key ();
     get db login
   in
   Ann_misc.in_mutex mutex f ()

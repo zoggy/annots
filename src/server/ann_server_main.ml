@@ -24,7 +24,7 @@
 
 (** *)
 
-type mode = Init | Server
+type mode = Init | Server | Add_user of string
 let mode = ref Server
 let config_file = ref "config.txt"
 
@@ -32,6 +32,9 @@ let options =
   Arg.align
     [ "--init", Arg.Unit (fun () -> mode := Init), " init database" ;
       "-c", Arg.String ((:=) config_file), "file read configuration from file; default is "^ !config_file ;
+
+      "--add-user", Arg.String (fun s -> mode := Add_user s), " login,name,firstname,email,home add user" ;
+
     ]
 
 let connect cfg = Ann_config.(
@@ -51,12 +54,29 @@ let init config_file =
       exit 1
 ;;
 
+let add_user config_file s =
+  let cfg = Ann_config.read_config config_file in
+  let db = connect cfg in
+  match Ann_misc.split_string s [','] with
+  | [login ; name ; firstname ; email ; home] ->
+      begin
+        try
+          let home = Some (Rdf_iri.iri home) in
+          ignore(Ann_users.add db ~login ~name ~firstname ~email ~home ())
+        with
+        Ann_users.Error e ->
+            prerr_endline (Ann_users.string_of_error e);
+            exit 1
+      end
+  | _ -> failwith "wrong number of fields in --add-user; use -help to get help"
+
 let usage = Printf.sprintf "Usage: %s [options]\nwhere options are:" (Filename.basename Sys.argv.(0));;
 
 let main () =
   Arg.parse options (fun _ -> failwith (Arg.usage_string options usage)) usage;
   match !mode with
     Init -> init !config_file
+  | Add_user s -> add_user !config_file s
   | Server ->
       let cfg = Ann_config.read_config !config_file in
       let db = connect cfg in

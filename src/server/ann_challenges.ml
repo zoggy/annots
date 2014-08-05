@@ -40,11 +40,6 @@ let remove_padding s =
   in
   iter 0
 
-let key_kind_rsa = "rsa"
-
-type key =
-  Rsa of Nocrypto.RSA.pub
-
 type challenge = {
     data : string ;
     right_key : Ann_types.right_key ;
@@ -99,7 +94,7 @@ let rsa_encrypt key data =
   Cstruct.to_string (Nocrypto.RSA.encrypt ~key cs)
 
 let encrypt = function
-  Rsa key -> rsa_encrypt key
+  Ann_keys.Rsa key -> rsa_encrypt key
 
 let random_string = Ann_misc.random_string challenge_string_length
 

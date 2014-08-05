@@ -84,7 +84,7 @@ let auth_post_challenges cfg db req = function
   `List l ->
     begin
       [ Ann_http.mime_json,
-        fun () -> 
+        fun () ->
           let challenges = List.fold_left challenge_of_json [] l in
           let rights = List.fold_left rights_of_challenges Ann_types.Right_key_set.empty challenges in
           let token_id = Ann_token.add_token rights in
@@ -106,10 +106,10 @@ let pubkey_of_json = function
           let key_kind = mand_str_json_field "kind" l in
           let key =
             match key_kind with
-              s when s = Ann_challenges.key_kind_rsa ->
+              s when s = Ann_keys.key_kind_rsa ->
                 let exponent = mand_str_json_field "exponent" l in
                 let modulus = mand_str_json_field "modulus" l in
-                Ann_challenges.Rsa
+                Ann_keys.Rsa
                   { Nocrypto.RSA.e = Z.of_string exponent ; n = Z.of_string modulus }
             | _ -> bad_request (Printf.sprintf "Unhandled public key kind: %S" key_kind)
           in
