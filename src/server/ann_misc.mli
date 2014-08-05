@@ -69,6 +69,8 @@ val base64_of_string : string -> string
 val try_finalize : ('a -> 'b) -> 'a -> ('c -> unit) -> 'c -> 'b
 (*/i==v=[Misc.try_finalize]=1.0====*)
 
+val in_mutex : Mutex.t -> ('a -> 'b) -> 'a -> 'b
+
 val random_string : int -> (unit -> string)
 
 (*i==v=[File.file_of_string]=1.1====*)

@@ -64,20 +64,17 @@ module C :
 
     let challenges = ref (Int_map.empty : challenge Int_map.t)
     let add_challenge c =
-      Ann_misc.try_finalize
+      Ann_misc.in_mutex mutex
         (fun () ->
-          Mutex.lock mutex;
           let id = challenge_id () in
           challenges := Int_map.add id c !challenges;
           id
         ) ()
-        Mutex.unlock mutex
 
     let check id data =
       let data = remove_padding data in
-      Ann_misc.try_finalize
+      Ann_misc.in_mutex mutex
         (fun () ->
-          Mutex.lock mutex ;
           let res =
             try
               let c = Int_map.find id !challenges in
@@ -94,7 +91,6 @@ module C :
           in
           res
         ) ()
-        Mutex.unlock mutex
   end
 
 

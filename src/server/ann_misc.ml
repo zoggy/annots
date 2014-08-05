@@ -126,6 +126,10 @@ let try_finalize f x finally y =
   res
 (*/c==v=[Misc.try_finalize]=1.0====*)
 
+let in_mutex m f x =
+  Mutex.lock m ;
+  try_finalize f x Mutex.unlock m
+
 let random_string size =
   let s = String.create size in
   (*let f _ = Char.chr (Random.int 255) in*)
