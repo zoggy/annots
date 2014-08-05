@@ -58,7 +58,8 @@ let add db ~name ~shortname ~descr () =
   if not (is_valid_shortname shortname) then raise (Invalid_shortname shortname);
   let f () =
     if group_exists db shortname then raise (Group_exists shortname);
-    G.insert db ~name ~shortname ~descr ();
+    let right_key = Ann_keys.new_right_key db in
+    G.insert db ~name ~shortname ~descr ~right_key ();
     get db shortname
   in
   Ann_misc.in_mutex mutex f ()
