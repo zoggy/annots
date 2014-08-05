@@ -26,7 +26,6 @@
 
 open Ann_types
 
-let () = Random.self_init()
 let challenge_string_length = 128
 
 let remove_padding s =

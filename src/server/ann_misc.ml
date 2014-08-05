@@ -24,6 +24,8 @@
 
 (** *)
 
+let () = Random.self_init()
+
 (*c==v=[String.strip_string]=1.0====*)
 let strip_string s =
   let len = String.length s in
