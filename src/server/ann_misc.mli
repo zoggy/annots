@@ -83,3 +83,13 @@ val random_string : int -> (unit -> string)
 val file_of_string : file:string -> string -> unit
 (*/i==v=[File.file_of_string]=1.1====*)
 
+
+(*i==v=[String.string_of_opt]=1.0====*)
+(** [string_of_opt s_opt] returns the empty string if
+   [s_opt = None] or [s] if [s_opt = Some s].
+@@version 1.0
+@@cgname String.string_of_opt*)
+val string_of_opt : string option -> string
+(*/i==v=[String.string_of_opt]=1.0====*)
+
+val map_opt : ('a -> 'b) -> 'a option  -> 'b option

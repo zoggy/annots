@@ -83,14 +83,17 @@ let challenge_of_json acc = function
 let auth_post_challenges cfg db req = function
   `List l ->
     begin
-      let challenges = List.fold_left challenge_of_json [] l in
-      let rights = List.fold_left rights_of_challenges Ann_types.Right_key_set.empty challenges in
-      let token_id = Ann_token.add_token rights in
-      Ann_http.result_json ~cookie_actions: [Ann_http.Set_cookie (token_cookie, token_id)]
-        (`Assoc [
-           (token_cookie, `String token_id);
-           ("number_of_rights", `Int (Ann_types.Right_key_set.cardinal rights))
-         ])
+      [ Ann_http.mime_json,
+        fun () -> 
+          let challenges = List.fold_left challenge_of_json [] l in
+          let rights = List.fold_left rights_of_challenges Ann_types.Right_key_set.empty challenges in
+          let token_id = Ann_token.add_token rights in
+          Ann_http.result_json ~cookie_actions: [Ann_http.Set_cookie (token_cookie, token_id)]
+            (`Assoc [
+               (token_cookie, `String token_id);
+               ("number_of_rights", `Int (Ann_types.Right_key_set.cardinal rights))
+             ])
+      ]
     end
 | _ -> bad_request "List of challenge responses expected."
 
@@ -149,9 +152,12 @@ let challenge_of_pubkey db (id, res) =
 let auth_get_challenges cfg db req json =
   match json with
     `List l ->
-      let keys = List.map pubkey_of_json l in
-      let challenges = List.map (challenge_of_pubkey db) keys in
-      Ann_http.result_json (`List challenges)
+      [ Ann_http.mime_json,
+        fun () ->
+          let keys = List.map pubkey_of_json l in
+          let challenges = List.map (challenge_of_pubkey db) keys in
+          Ann_http.result_json (`List challenges)
+      ]
   | _ -> bad_request "List of public keys expected."
 
 let json_of_request req =
@@ -165,8 +171,8 @@ let auth cfg db req path =
     match path, req#meth with
       ["pubkeys"], `POST -> auth_get_challenges cfg db req (json_of_request req)
     | ["challenges"], `POST -> auth_post_challenges cfg db req (json_of_request req)
-    | _ -> Ann_http.result_not_found "No service here."
+    | _ -> Ann_http.result_not_found cfg "No service here."
   with
     Yojson.Json_error msg
   | Bad_request msg ->
-      Ann_http.result_bad_request msg
+      Ann_http.result_bad_request cfg msg

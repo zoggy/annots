@@ -26,9 +26,13 @@
 
 module Iriset = Rdf_iri.Iriset
 
+let web_dir cfg = Filename.concat cfg.Ann_config.root_dir "web"
+let webtmpl_dir cfg = Filename.concat (web_dir cfg) "templates"
+let webfiles_dir cfg = Filename.concat (web_dir cfg) "files"
+
 let rec tmpl_file cfg file =
   let dirs =
-    [ Ann_http.webtmpl_dir cfg ;
+    [ webtmpl_dir cfg ;
       Ann_install.webtmpl_dir ;
     ]
   in
@@ -250,6 +254,4 @@ let page config ?env ~title ?javascript ?(wtitle=title) ?(navpath=[]) ?(error=""
 ;;
 
 let welcome_page cfg db =
-  Ann_http.result_page
-    (page cfg ~title: "Welcome to Annots"
-      [Xtmpl.D "bla bla bla"])
+  page cfg ~title: "Welcome to Annots" [Xtmpl.D "bla bla bla"]

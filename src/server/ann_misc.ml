@@ -143,3 +143,12 @@ let file_of_string ~file s =
   close_out oc
 (*/c==v=[File.file_of_string]=1.1====*)
 
+
+(*c==v=[String.string_of_opt]=1.0====*)
+let string_of_opt = function
+  None -> ""
+| Some s -> s
+(*/c==v=[String.string_of_opt]=1.0====*)
+
+let map_opt f = function Some x -> Some (f x) | None -> None
+

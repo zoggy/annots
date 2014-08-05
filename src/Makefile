@@ -60,11 +60,12 @@ ANNOTS_LIBS_BYTE=$(LIB_ANNOTS_BYTE)
 
 SERVER_CMOFILES= \
 	server/ann_token.cmo \
+	server/ann_xpage.cmo \
 	server/ann_http.cmo \
 	server/ann_challenges.cmo \
 	server/ann_keys.cmo \
 	server/ann_auth.cmo \
-	server/ann_xpage.cmo \
+	server/ann_server_users.cmo \
 	server/ann_server.cmo \
 	server/ann_server_main.cmo
 

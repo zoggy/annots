@@ -26,11 +26,25 @@
 
 open Ann_config
 
-let route_annots cfg db req = function
-  _ -> Ann_http.result "not implemented yet"
+let result_by_mime cfg req funs =
+  let accept = req#header ~name: "accept" in
+  match accept, funs with
+    _, [] -> assert false
+  | "", (_, f) :: _ -> f ()
+  | accept, _ ->
+      let medias = Ann_http.accepted_medias accept in
+      let mimes = List.map (fun m -> m.Ann_http.range) medias in
+      match Ann_http.find_first_mime_match mimes funs with
+        None -> Ann_http.result_not_acceptable cfg accept
+      | Some f -> f ()
 
-let route_users cfg db req = function
-  _ -> Ann_http.result "not implemented yet"
+let route_users = Ann_server_users.route
+
+let route_annots cfg db req = function
+  _ -> Ann_http.result_not_implemented cfg
+
+let route_groups cfg db req = function
+  _ -> Ann_http.result_not_implemented cfg
 
 let route_auth = Ann_auth.auth
 
@@ -40,18 +54,22 @@ let route_file cfg db req path =
   let path = List.filter ((<>) Filename.parent_dir_name) path in
   let file = String.concat "/" path in
   let dirs = [
-      Ann_http.webfiles_dir cfg ;
+      Ann_xpage.webfiles_dir cfg ;
       Ann_install.webfiles_dir ;
     ]
   in
   try Ann_http.result_file (Ann_misc.find_in_dirs dirs file)
-  with _ -> Ann_http.result_not_found "No service here."
+  with _ -> Ann_http.result_not_found cfg "No service here."
 
 let route cfg db req = function
   "annots" :: q -> route_annots cfg db req q
 | "users" :: q -> route_users cfg db req q
+| "groups" :: q -> route_groups cfg db req q
 | "auth" :: q -> route_auth cfg db req q
-| [] -> Ann_xpage.welcome_page cfg db
+| [] -> 
+    [ Ann_http.mime_html, (fun () -> Ann_http.result_page (Ann_xpage.welcome_page cfg db)) ;
+      Ann_http.mime_text_plain, (fun () -> Ann_http.result "") ;
+    ]
 | path -> route_file cfg db req path
 
 let get_useful_path =
@@ -72,20 +90,21 @@ let header_of_cookie_action = function
     ("Set-Cookie", Printf.sprintf "%s=, Path=/, Expires=%s" k past_cookie_date)
 
 let send_result res ouch =
-  let (body, mime) = res.Ann_http.body in
+  let body = res.Ann_http.body in
   let cookies = List.map header_of_cookie_action res.Ann_http.cookie_actions in
   let code = `Code res.Ann_http.code in
-  let headers = cookies @ [ "content-type", mime ] in
+  let headers = cookies @ [ "content-type", Ann_http.string_of_mime res.Ann_http.mime ] in
   Http_daemon.respond ~code ~body ~headers ouch
 
 let callback cfg db req ouch =
   let path = Ann_misc.split_string req#path ['/'] in
   let root_path = Rdf_iri.path cfg.root_iri in
-  let result =
+  let results =
     match get_useful_path root_path path with
-      None -> Ann_http.result_not_found req#path
+      None -> Ann_http.result_not_found cfg req#path
     | Some p -> route cfg db req p
   in
+  let result = result_by_mime cfg req results in
   send_result result ouch
 
 let on_exn e ouch =

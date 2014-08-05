@@ -12,32 +12,42 @@ server/ann_db.cmo : server/ann_db_base.cmo server/ann_db.cmi
 server/ann_db.cmx : server/ann_db_base.cmx server/ann_db.cmi
 server/ann_db_base.cmo : server/ann_types.cmi
 server/ann_db_base.cmx : server/ann_types.cmx
-server/ann_http.cmo : server/ann_misc.cmi server/ann_config.cmi
-server/ann_http.cmx : server/ann_misc.cmx server/ann_config.cmx
+server/ann_groups.cmo : server/ann_users.cmo server/ann_misc.cmi \
+    server/ann_db.cmi
+server/ann_groups.cmx : server/ann_users.cmx server/ann_misc.cmx \
+    server/ann_db.cmx
+server/ann_http.cmo : server/ann_xpage.cmo server/ann_misc.cmi
+server/ann_http.cmx : server/ann_xpage.cmx server/ann_misc.cmx
 server/ann_install.cmo : server/ann_install.cmi
 server/ann_install.cmx : server/ann_install.cmi
 server/ann_keys.cmo : server/ann_db.cmi server/ann_challenges.cmo
 server/ann_keys.cmx : server/ann_db.cmx server/ann_challenges.cmx
 server/ann_misc.cmo : server/ann_misc.cmi
 server/ann_misc.cmx : server/ann_misc.cmi
-server/ann_server.cmo : server/ann_xpage.cmo server/ann_misc.cmi \
-    server/ann_install.cmi server/ann_http.cmo server/ann_config.cmi \
-    server/ann_auth.cmo server/ann_server.cmi
-server/ann_server.cmx : server/ann_xpage.cmx server/ann_misc.cmx \
-    server/ann_install.cmx server/ann_http.cmx server/ann_config.cmx \
-    server/ann_auth.cmx server/ann_server.cmi
+server/ann_server.cmo : server/ann_xpage.cmo server/ann_server_users.cmo \
+    server/ann_misc.cmi server/ann_install.cmi server/ann_http.cmo \
+    server/ann_config.cmi server/ann_auth.cmo server/ann_server.cmi
+server/ann_server.cmx : server/ann_xpage.cmx server/ann_server_users.cmx \
+    server/ann_misc.cmx server/ann_install.cmx server/ann_http.cmx \
+    server/ann_config.cmx server/ann_auth.cmx server/ann_server.cmi
 server/ann_server_main.cmo : server/ann_server.cmi server/ann_db.cmi \
     server/ann_config.cmi
 server/ann_server_main.cmx : server/ann_server.cmx server/ann_db.cmx \
     server/ann_config.cmx
+server/ann_server_users.cmo : server/ann_xpage.cmo server/ann_users.cmo \
+    server/ann_misc.cmi server/ann_http.cmo server/ann_db.cmi
+server/ann_server_users.cmx : server/ann_xpage.cmx server/ann_users.cmx \
+    server/ann_misc.cmx server/ann_http.cmx server/ann_db.cmx
 server/ann_token.cmo : server/ann_types.cmi server/ann_misc.cmi
 server/ann_token.cmx : server/ann_types.cmx server/ann_misc.cmx
 server/ann_types.cmo : server/ann_types.cmi
 server/ann_types.cmx : server/ann_types.cmi
+server/ann_users.cmo : server/ann_misc.cmi server/ann_db.cmi
+server/ann_users.cmx : server/ann_misc.cmx server/ann_db.cmx
 server/ann_xpage.cmo : server/ann_misc.cmi server/ann_install.cmi \
-    server/ann_http.cmo server/ann_config.cmi
+    server/ann_config.cmi
 server/ann_xpage.cmx : server/ann_misc.cmx server/ann_install.cmx \
-    server/ann_http.cmx server/ann_config.cmx
+    server/ann_config.cmx
 server/ann_config.cmi :
 server/ann_db.cmi : server/ann_types.cmi server/ann_db_base.cmo
 server/ann_install.cmi :

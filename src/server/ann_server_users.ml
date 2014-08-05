@@ -24,39 +24,39 @@
 
 (** *)
 
-module U = Ann_db.Users
+module H = Ann_http
+module U = Ann_users
+module Udb = Ann_db.Users
 
-let mutex = Mutex.create ()
+let user_page cfg u =
+  Ann_xpage.page cfg ~title: (Printf.sprintf "%s %s" u.Udb.firstname u.Udb.name)
+    [Xtmpl.D "bla bla bla"]
 
-type error =
-| Login_exists of string
-| Unknown_user of string
+let user_json u =
+  `Assoc [
+    "login", `String u.Udb.login ;
+    "firstname", `String u.Udb.firstname ;
+    "name", `String u.Udb.name ;
+    "email", `String u.Udb.email ;
+    "home", `String (Ann_misc.string_of_opt (Ann_misc.map_opt Rdf_iri.string u.Udb.home)) ;
+  ]
 
-exception Error of error
-let error e = raise (Error e)
-
-let string_of_error = function
-  Login_exists s -> Printf.sprintf "Login %S is already taken." s
-| Unknown_user login -> Printf.sprintf "Unknown user %S" login
-
-let login_exists db login = U.select db ~login () <> []
-
-let get_by_id db id =
-  match U.select db ~id () with
-    [] -> error (Unknown_user ("#"^(string_of_int id)))
-  | u :: _ -> u
-
-let get db login =
-  match U.select db ~login () with
-    [] -> error (Unknown_user login)
-  | u :: _ -> u
-
-let add db ~name ~firstname ~login ~email ?home () =
-  let f () =
-    if login_exists db login then error (Login_exists login);
-    U.insert db ~name ~firstname ~login ~email ?home ();
-    get db login
-  in
-  Ann_misc.in_mutex mutex f ()
-
-let list db = U.select db ()
+let get_user cfg db login =
+  try
+    let u = U.get db login in
+    [ H.mime_json, (fun () -> H.result_json (user_json u)) ;
+      H.mime_html, (fun () -> H.result_page (user_page cfg u)) ;
+    ]
+  with
+    U.Error e ->
+      H.result_not_found cfg (U.string_of_error e)
+(*
+let handle_errors f x =
+  try f x
+  with e
+    Ann_users.Unknown_user login ->
+     [
+*)
+let route cfg db req = function
+  [login] when req#meth = `GET -> get_user cfg db login
+| _ -> []
