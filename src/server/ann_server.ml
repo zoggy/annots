@@ -29,7 +29,7 @@ open Ann_config
 let result_by_mime cfg req funs =
   let accept = req#header ~name: "accept" in
   match accept, funs with
-    _, [] -> assert false
+    _, [] -> Ann_http.result_not_acceptable cfg accept
   | "", (_, f) :: _ -> f ()
   | accept, _ ->
       let medias = Ann_http.accepted_medias accept in
@@ -39,11 +39,9 @@ let result_by_mime cfg req funs =
       | Some f -> f ()
 
 let route_users = Ann_server_users.route
+let route_groups = Ann_server_groups.route
 
 let route_annots cfg db req = function
-  _ -> Ann_http.result_not_implemented cfg
-
-let route_groups cfg db req = function
   _ -> Ann_http.result_not_implemented cfg
 
 let route_auth = Ann_auth.auth
@@ -66,7 +64,7 @@ let route cfg db req = function
 | "users" :: q -> route_users cfg db req q
 | "groups" :: q -> route_groups cfg db req q
 | "auth" :: q -> route_auth cfg db req q
-| [] -> 
+| [] ->
     [ Ann_http.mime_html, (fun () -> Ann_http.result_page (Ann_xpage.welcome_page cfg db)) ;
       Ann_http.mime_text_plain, (fun () -> Ann_http.result "") ;
     ]

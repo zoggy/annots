@@ -24,73 +24,39 @@
 
 (** *)
 
-module G = Ann_db.Groups
-module U = Ann_db.Users
-module GU = Ann_db.Group_users
+module H = Ann_http
+module G = Ann_groups
+module U = Ann_users
+module Gdb = Ann_db.Groups
+module Udb = Ann_db.Users
 
-let mutex = Mutex.create ()
+let group_page cfg g =
+  Ann_xpage.page cfg ~title: g.Gdb.name
+    [Xtmpl.D "bla bla bla"]
 
-type error =
-  Group_exists of string
-| Unknown_group of string
-| Invalid_shortname of string
+let group_json g =
+  `Assoc [
+    "shortname", `String g.Gdb.shortname ;
+    "name", `String g.Gdb.name ;
+    "descr", `String g.Gdb.descr ;
+  ]
 
-exception Error of error
-
-let error e = raise (Error e)
-
-let string_of_error = function
-  Group_exists s -> Printf.sprintf "Group %S already exists." s
-| Unknown_group s -> Printf.sprintf "Unknown group %S." s
-| Invalid_shortname s -> Printf.sprintf "Invalid group shortname %S." s
-
-let group_exists db shortname = G.select db ~shortname () <> []
-
-let is_valid_shortname s =
-  let f = function
-    'a'..'z' | 'A'..'Z' | '-' | '|' | '0'..'9' -> ()
-  | _ -> failwith ""
-  in
-  try String.iter f s; true
-  with Failure _ -> false
-
-let get_by_id db id =
-  match G.select db ~id () with
-    [] -> error (Unknown_group ("#"^(string_of_int id)))
-  | g :: _ -> g
-
-let get db shortname =
-  match G.select db ~shortname () with
-    [] -> error (Unknown_group shortname)
-  | g :: _ -> g
-
-let add db ~name ~shortname ~descr () =
-  if not (is_valid_shortname shortname) then error (Invalid_shortname shortname);
-  let f () =
-    if group_exists db shortname then error (Group_exists shortname);
-    let right_key = Ann_keys.new_right_key db in
-    G.insert db ~name ~shortname ~descr ~right_key ();
-    get db shortname
-  in
-  Ann_misc.in_mutex mutex f ()
-
-let list db = G.select db ()
-
-let is_member db g u =
-  GU.select db ~id_group: g.G.id ~id_user: u.U.id () <> []
-
-let add_member db g u =
-  let f () =
-    if not (is_member db g u) then
-      GU.insert db ~id_group: g.G.id ~id_user: u.U.id ()
-    else
-      ()
-  in
-  Ann_misc.in_mutex mutex f ()
-
-let members db g = GU.select db ~id_group: g.G.id ()
-
-let member_users db g =
-  let members = members db g in
-  List.map (fun gu -> Ann_users.get_by_id db gu.GU.id_user) members
-
+let get_group cfg db shortname =
+  try
+    let g = G.get db shortname in
+    [ H.mime_json, (fun () -> H.result_json (group_json g)) ;
+      H.mime_html, (fun () -> H.result_page (group_page cfg g)) ;
+    ]
+  with
+    G.Error e ->
+      H.result_not_found cfg (G.string_of_error e)
+(*
+let handle_errors f x =
+  try f x
+  with e
+    Ann_users.Unknown_user login ->
+     [
+*)
+let route cfg db req = function
+  [shortname] when req#meth = `GET -> get_group cfg db shortname
+| _ -> []

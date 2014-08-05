@@ -24,7 +24,7 @@
 
 (** *)
 
-type mode = Init | Server | Add_user of string
+type mode = Init | Server | Add_user | Add_group
 let mode = ref Server
 let config_file = ref "config.txt"
 
@@ -33,8 +33,8 @@ let options =
     [ "--init", Arg.Unit (fun () -> mode := Init), " init database" ;
       "-c", Arg.String ((:=) config_file), "file read configuration from file; default is "^ !config_file ;
 
-      "--add-user", Arg.String (fun s -> mode := Add_user s), " login,name,firstname,email,home add user" ;
-
+      "--add-user", Arg.Unit (fun () -> mode := Add_user), "add user" ;
+      "--add-group", Arg.Unit (fun () -> mode := Add_group), "add group" ;
     ]
 
 let connect cfg = Ann_config.(
@@ -54,10 +54,10 @@ let init config_file =
       exit 1
 ;;
 
-let add_user config_file s =
+let add_user config_file args =
   let cfg = Ann_config.read_config config_file in
   let db = connect cfg in
-  match Ann_misc.split_string s [','] with
+  match args with
   | [login ; name ; firstname ; email ; home] ->
       begin
         try
@@ -70,13 +70,37 @@ let add_user config_file s =
       end
   | _ -> failwith "wrong number of fields in --add-user; use -help to get help"
 
-let usage = Printf.sprintf "Usage: %s [options]\nwhere options are:" (Filename.basename Sys.argv.(0));;
+
+let add_group config_file args =
+  let cfg = Ann_config.read_config config_file in
+  let db = connect cfg in
+  match args with
+  | [shortname ; name ; descr ] ->
+      begin
+        try
+          ignore(Ann_groups.add db ~shortname ~name ~descr ())
+        with
+        Ann_groups.Error e ->
+            prerr_endline (Ann_groups.string_of_error e);
+            exit 1
+      end
+  | _ -> failwith "wrong number of fields in --add-group; use -help to get help"
+
+let usage = Printf.sprintf "Usage: %s [options]\n
+  The following options are subcommands:
+  --init\n
+  --add-user login name firstname email home\n
+  --add-group shortname name description\n
+Options are:" (Filename.basename Sys.argv.(0));;
 
 let main () =
-  Arg.parse options (fun _ -> failwith (Arg.usage_string options usage)) usage;
+  let args = ref [] in
+  Arg.parse options (fun s -> args := s :: !args) usage;
+  let args = List.rev !args in
   match !mode with
     Init -> init !config_file
-  | Add_user s -> add_user !config_file s
+  | Add_user -> add_user !config_file args
+  | Add_group -> add_group !config_file args
   | Server ->
       let cfg = Ann_config.read_config !config_file in
       let db = connect cfg in

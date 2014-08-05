@@ -66,6 +66,7 @@ SERVER_CMOFILES= \
 	server/ann_challenges.cmo \
 	server/ann_auth.cmo \
 	server/ann_server_users.cmo \
+	server/ann_server_groups.cmo \
 	server/ann_server.cmo \
 	server/ann_server_main.cmo
 
