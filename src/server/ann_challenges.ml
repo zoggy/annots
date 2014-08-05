@@ -26,7 +26,11 @@
 
 open Ann_types
 
-let challenge_string_length = 128
+(* When encrypting with RSA key of size n bits, the longest message
+  one can encrypt is of length (n / 8) - 1 characters. See Cryptokit
+  documentation. Since we require at least 1024 bits RSA keys, the
+  minimum length of the random string used in challenges in 1024/8 - 1 = 127. *)
+let challenge_string_length = 127
 
 let remove_padding s =
   let len = String.length s in
@@ -91,7 +95,10 @@ module C :
 
 let rsa_encrypt key data =
   let cs = Cstruct.of_string data in
-  Cstruct.to_string (Nocrypto.RSA.encrypt ~key cs)
+  try Cstruct.to_string (Nocrypto.RSA.encrypt ~key cs)
+  with e ->
+    prerr_endline (Printf.sprintf "Could not encrypt string %S" data);
+    raise e
 
 let encrypt = function
   Ann_keys.Rsa key -> rsa_encrypt key

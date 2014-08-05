@@ -132,8 +132,8 @@ let in_mutex m f x =
 
 let random_string size =
   let s = String.create size in
-  (*let f _ = Char.chr (Random.int 255) in*)
-  let f _ = Char.chr (Random.int 26 + 65) in
+  let f _ = Char.chr ((Random.int 254) + 1) in
+  (*let f _ = Char.chr (Random.int 26 + 65) in*)
   fun () -> String.map f s
 
 (*c==v=[File.file_of_string]=1.1====*)

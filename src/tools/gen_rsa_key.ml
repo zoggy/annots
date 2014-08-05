@@ -70,6 +70,17 @@ q': %s
       (Z.to_string k.dq)
       (Z.to_string k.q')
 (*
+let test i =
+  let s = String.make 127 (Char.chr i) in
+  try
+    let cs = Cstruct.of_string s in
+    ignore(Nocrypto.RSA.encrypt ~key: (Nocrypto.RSA.pub_of_priv k) cs)
+  with e ->
+    prerr_endline (Printf.sprintf "Error with char %d: %s" i (Printexc.to_string e))
+
+let () = for i = 0 to 255 do test i done
+*)
+(*
 let s = Cstruct.to_string (Nocrypto.RSA.encrypt (Nocrypto.RSA.pub_of_priv k) (Cstruct.of_string "helloworld!"))
 let s = Ann_misc.base64_of_string s
 let s = Ann_misc.string_of_base64 s
