@@ -48,7 +48,9 @@ LIB_ANNOTS_CMOFILES= \
 	server/ann_misc.cmo \
 	server/ann_config.cmo \
 	server/ann_db_base.cmo \
-	server/ann_db.cmo
+	server/ann_db.cmo \
+	server/ann_users.cmo \
+	server/ann_groups.cmo
 
 LIB_ANNOTS_CMIFILES= $(LIB_ANNOTS_CMOFILES:.cmo=.cmi)
 LIB_ANNOTS_CMXFILES= $(LIB_ANNOTS_CMOFILES:.cmo=.cmx)
