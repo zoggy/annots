@@ -27,7 +27,19 @@
 open Ann_types
 
 let () = Random.self_init()
-let challenge_string_length = 40
+let challenge_string_length = 128
+
+let remove_padding s =
+  let len = String.length s in
+  let rec iter i =
+    if i < len then
+      match String.get s i with
+        '\000' -> iter (i+1)
+      | _ -> String.sub s i (len - i)
+    else
+      ""
+  in
+  iter 0
 
 let key_kind_rsa = "rsa"
 
@@ -63,6 +75,7 @@ module C :
         Mutex.unlock mutex
 
     let check id data =
+      let data = remove_padding data in
       Ann_misc.try_finalize
         (fun () ->
           Mutex.lock mutex ;
@@ -70,8 +83,10 @@ module C :
             try
               let c = Int_map.find id !challenges in
               challenges := Int_map.remove id !challenges ;
+              (*
               prerr_endline (Printf.sprintf "c.data=%s\ndata=%s" c.data data);
               prerr_endline (Printf.sprintf "len(c.data)=%d\nlen(data)=%d" (String.length c.data) (String.length data));
+              *)
               if c.data = data then
                 Some c
               else

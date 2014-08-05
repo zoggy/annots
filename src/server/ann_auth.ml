@@ -55,10 +55,10 @@ let mand_int_json_field name l =
 let rights_of_challenges acc (id, data) =
   match Ann_challenges.check_challenge id data with
     None ->
-      prerr_endline (Printf.sprintf "challenge %d not passed" id);
+      (*prerr_endline (Printf.sprintf "challenge %d not passed" id);*)
       acc
   | Some c ->
-      prerr_endline (Printf.sprintf "challenge %d passed" id);
+      (*prerr_endline (Printf.sprintf "challenge %d passed" id);*)
       Ann_types.Right_key_set.add c.Ann_challenges.right_key acc
 
 let challenge_of_json acc = function
@@ -69,11 +69,13 @@ let challenge_of_json acc = function
         let data = Ann_misc.string_of_base64 (mand_str_json_field "data" l) in
         (challenge_id, data) :: acc
       with e ->
+          (*
           let msg = match e with
               Bad_request msg -> msg
             | _ -> Printexc.to_string e
           in
           prerr_endline msg;
+          *)
           acc
     end
 | _ -> acc
@@ -129,7 +131,7 @@ let challenge_of_pubkey db (id, res) =
                 Ann_challenges.create_challenge t.Ann_db.Pubkeys.right_key key
               in
               let data = Ann_misc.base64_of_string enc_data in
-              prerr_endline ("sending enc_data="^data);
+              (*prerr_endline ("sending enc_data="^data);*)
               [ "challenge_id", `Int challenge_id ;
                 "data", `String data ;
               ]

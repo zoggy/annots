@@ -108,7 +108,11 @@ let go config_file keyfile =
   match json with
     `List [ `Assoc l] ->
       begin
-        let challenge_id = List.assoc "challenge_id" l in
+        let challenge_id =
+          try List.assoc "challenge_id" l
+          with Not_found ->
+              failwith ("Missing challenge_id in JSON: "^(Yojson.Safe.to_string json))
+        in
         prerr_endline (Yojson.Safe.to_string json);
         let data = List.assoc "data" l in
         match data with
@@ -116,7 +120,7 @@ let go config_file keyfile =
             prerr_endline ("received encoded data="^s);
             let s = Ann_misc.string_of_base64 s in
             let s = Cstruct.to_string (Nocrypto.RSA.decrypt ~key (Cstruct.of_string s)) in
-            prerr_endline ("decoded data="^s);
+            prerr_endline (Printf.sprintf "decoded data=%S" s);
             let s = Ann_misc.base64_of_string s in
             prerr_endline ("sending decoded data="^s);
             let json = `List [ `Assoc [ "challenge_id", challenge_id ; ("data", `String s)] ] in
