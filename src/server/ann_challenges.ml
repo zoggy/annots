@@ -29,7 +29,7 @@ open Ann_types
 (* When encrypting with RSA key of size n bits, the longest message
   one can encrypt is of length (n / 8) - 1 characters. See Cryptokit
   documentation. Since we require at least 1024 bits RSA keys, the
-  minimum length of the random string used in challenges in 1024/8 - 1 = 127. *)
+  length of the random string used in challenges in 1024/8 - 1 = 127. *)
 let challenge_string_length = 127
 
 let remove_padding s =
