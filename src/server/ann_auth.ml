@@ -160,8 +160,12 @@ let auth_get_challenges cfg db req json =
       ]
   | _ -> bad_request "List of public keys expected."
 
+let header req ~name =
+  try req#header ~name
+  with _ -> ""
+
 let json_of_request req =
-  match req#header ~name: "content-type" with
+    match header req ~name: "content-type" with
     "application/jsonrequest"
   | "application/json" -> J.from_string req#body
   | _ -> bad_request "Expected JSON data"

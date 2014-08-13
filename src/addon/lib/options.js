@@ -11,9 +11,10 @@ store.servers = [
   ];
 
 store.keys = [
-  { name: "mainkey",
-    type : "rsa",
-    key : ""
+  { id: "mainkey",
+    kind : "rsa",
+    exponent : "65567",
+    modulus : "929123091209124"
   }
 ]
 
