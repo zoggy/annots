@@ -10,13 +10,13 @@ store.servers = [
   }
   ];
 
-/*
 store.keys = [
-  { type : "rsa",
+  { name: "mainkey",
+    type : "rsa",
     key : ""
   }
 ]
-*/
+
 
 var option_tab = null ;
 const option_tab_url = self.data.url("options-main.html");
@@ -34,7 +34,8 @@ function on_option_tab_open(tab) {
     onAttach: function(worker) {
       console.log("sending message")
       worker.port.emit("setServers", store.servers);
-    /*worker.port.on("gotElement", function(elementContent) {
+      worker.port.emit("setKeys", store.keys);
+      /*worker.port.on("gotElement", function(elementContent) {
       console.log(elementContent);
     });*/
     },
