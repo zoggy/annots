@@ -3,13 +3,13 @@ var tabs = require("sdk/tabs");
 var ss = require("sdk/simple-storage");
 var pageMod = require("sdk/page-mod");
 var store = ss.storage;
-/*
+
 store.servers = [
   { url : 'http://localhost:8082',
     name : "local"
   }
   ];
-  */
+
 /*
 store.keys = [
   { type : "rsa",
@@ -44,7 +44,10 @@ function on_option_tab_open(tab) {
       self.data.url('jquery-ui/jquery-ui.js'),
       self.data.url('options-ui.js'),
     ],
-    contentStyleFile: self.data.url('jquery-ui/jquery-ui.css')
+    contentStyleFile: [
+      self.data.url('jquery-ui/jquery-ui.css'),
+      self.data.url('style.css'),
+    ],
   });
 
 }
