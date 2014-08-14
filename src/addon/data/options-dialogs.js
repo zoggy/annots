@@ -22,8 +22,6 @@ function confirmBox(title, msg, callback) {
         resizable: false,
         buttons: {
             Yes: function () {
-                // $(obj).removeAttr('onclick');
-                // $(obj).parents('.Parent').remove();
                 callback();
                 $(this).dialog("close");
             },

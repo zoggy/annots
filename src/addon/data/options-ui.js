@@ -53,7 +53,7 @@ function destroyServer(server) {
 
 function addKeyDiv(key) {
   var div_keys = $("#keys") ;
-  var div = $('<div id="key-' + key.id + '" class="key"/>') ;
+  var div = $('<div id="key-' + key.id + '" class="key alert alert-heading"/>') ;
   div_keys.append(div);
   return div;
 }

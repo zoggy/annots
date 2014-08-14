@@ -27,7 +27,7 @@ function serverOnPostChallengesComplete(server, response) {
   if (responseOk(response)) {
     var json = response.json;
     server.state_writable = (json.writable == null) ? false : json.writable ;
-    var msg = "Connected "+(server.state_writable ? "and writable " : "") + " with " + json.number_of_rights + " rights" ;
+    var msg = "Connected "+(server.state_writable ? "and writable " : "") + " with " + json.number_of_rights + " right(s) associated to your keys." ;
     serverOk(server, msg);
   }
   else
