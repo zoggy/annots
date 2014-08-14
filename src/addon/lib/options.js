@@ -3,6 +3,7 @@ var tabs = require("sdk/tabs");
 var ss = require("sdk/simple-storage");
 var pageMod = require("sdk/page-mod");
 var store = ss.storage;
+var server = require("server");
 
 store.servers = [
   { url : "http://localhost:8082",
@@ -39,6 +40,7 @@ function close_option_tab(tab) {
   option_tab = null ;
 }
 
+
 function on_option_tab_open(tab) {
   option_tab = tab;
   var pm = pageMod.PageMod({
@@ -47,6 +49,7 @@ function on_option_tab_open(tab) {
     onAttach: function(worker) {
       worker.port.emit("setServers", store.servers);
       worker.port.emit("setKeys", store.keys);
+      worker.port.on("reconnect", server.getTokensForServers);
     },
     contentScriptWhen: "ready",
     contentScriptFile: [
