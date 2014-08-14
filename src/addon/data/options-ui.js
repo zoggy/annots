@@ -37,6 +37,6 @@ function setServers(servers) {
 
 self.port.on ("setServers", function(data) {setServers(data);});
 //self.port.on ("setKeys", function(data) {setKeys(data);});
-self.port.on ("updateServer", function(data) {ServerDisplay(data);});
+self.port.on ("updateServer", function(data) {serverDisplay(data);});
 
 $("#reconnect").button().click(function() { self.port.emit("reconnect");});

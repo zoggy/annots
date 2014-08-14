@@ -11,10 +11,12 @@ function serverError(server, msg) {
   server.state_ok = false;
   server.state_info = msg;
   server.state_writable = false ;
+  displayServer(server);
 }
 function serverOk(server, msg) {
   server.state_ok = true ;
   server.state_info = msg ;
+  displayServer(server);
 }
 
 function responseOk (response) {

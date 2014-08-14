@@ -42,7 +42,7 @@ function close_option_tab(tab) {
 
 
 function on_option_tab_open(tab) {
-  option_tab = tab;
+  option_tab = { tab: tab } ;
   var pm = pageMod.PageMod({
     include: option_tab_url,
     attachTo: ["existing", "top"],
@@ -50,6 +50,7 @@ function on_option_tab_open(tab) {
       worker.port.emit("setServers", store.servers);
       worker.port.emit("setKeys", store.keys);
       worker.port.on("reconnect", server.getTokensForServers);
+      option_tab.worker = worker ;
     },
     contentScriptWhen: "ready",
     contentScriptFile: [
