@@ -127,6 +127,7 @@ let serve cfg db =
       port ;
       root_dir = Some cfg.root_dir ;
       callback = callback cfg db ;
+      timeout = None ;
       exn_handler = Some on_exn ;
     }
   in

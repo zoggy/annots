@@ -1,17 +1,17 @@
 console.log("start options-ui.js");
 
-function serverAddDiv(server) {
+function addServerDiv(server) {
   var div_servers = $("#servers") ;
   var div = $('<div id="server-' + server.id + '" class="server"/>') ;
   div_servers.append(div);
   return div;
 }
 
-function serverDisplay (server) {
+function displayServer (server) {
   var id = "#server-" + server.id ;
   var div = $(id);
   if (div.length <= 0)
-    { div = serverAddDiv(server); }
+    { div = addServerDiv(server); }
   else
     { div.empty(); }
 
@@ -30,13 +30,42 @@ function setServers(servers) {
   div_servers.empty();
   for (var i in servers) {
     var s = servers[i];
-    s.id = i ;
-    serverDisplay(s);
+    displayServer(s);
+  }
+}
+
+
+function addKeyDiv(key) {
+  var div_keys = $("#keys") ;
+  var div = $('<div id="key-' + key.id + '" class="key"/>') ;
+  div_keys.append(div);
+  return div;
+}
+
+function displayKey (key) {
+  var id = "#key-" + key.id ;
+  var div = $(id);
+  if (div.length <= 0)
+    { div = addKeyDiv(key); }
+  else
+    { div.empty(); }
+
+  div.append('<div class="key-name">' + key.id + '</div>') ;
+  div.append('<div class="key-kind">' + key.kind + '</div>') ;
+}
+
+function setKeys(keys) {
+  console.log("received" + keys + "\n" + typeof keys);
+  var div_keys = $("#keys") ;
+  div_keys.empty();
+  for (var i in keys) {
+    var k = keys[i];
+    displayKey(k);
   }
 }
 
 self.port.on ("setServers", function(data) {setServers(data);});
-//self.port.on ("setKeys", function(data) {setKeys(data);});
-self.port.on ("updateServer", function(data) {serverDisplay(data);});
+self.port.on ("setKeys", function(data) {setKeys(data);});
+self.port.on ("updateServer", function(data) {displayServer(data);});
 
 $("#reconnect").button().click(function() { self.port.emit("reconnect");});
