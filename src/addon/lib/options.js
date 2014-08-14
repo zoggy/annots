@@ -5,16 +5,6 @@ var pageMod = require("sdk/page-mod");
 var store = ss.storage;
 var server = require("server");
 
-store.servers = [
-  { url : "http://localhost:8082",
-    name : "local",
-    state_ok : false,
-    state_info : "Not connected",
-    state_writable: false,
-    id : 0,
-  }
-  ];
-
 store.keys = [
   { id: "mainkey",
     kind : "rsa",
@@ -40,7 +30,6 @@ function close_option_tab(tab) {
   option_tab = null ;
 }
 
-
 function on_option_tab_open(tab) {
   option_tab = { tab: tab } ;
   var pm = pageMod.PageMod({
@@ -50,12 +39,15 @@ function on_option_tab_open(tab) {
       worker.port.emit("setServers", store.servers);
       worker.port.emit("setKeys", store.keys);
       worker.port.on("reconnect", server.getTokensForServers);
+      worker.port.on("addServer", server.addServer);
+      worker.port.on("removeServer", server.removeServer);
       option_tab.worker = worker ;
     },
     contentScriptWhen: "ready",
     contentScriptFile: [
       self.data.url("jquery.js"),
       self.data.url("jquery-ui/jquery-ui.js"),
+      self.data.url("options-dialogs.js"),
       self.data.url("options-ui.js"),
     ],
     contentStyleFile: [

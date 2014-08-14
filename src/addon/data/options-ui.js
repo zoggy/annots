@@ -16,12 +16,25 @@ function displayServer (server) {
     { div.empty(); }
 
   div.removeClass("alert alert-info alert-error alert-success");
-  var cl = (server.state_ok) ? ((server.writable) ? "alert-info" : "alert-success") : "alert-error" ;
+  var cl = (server.state_ok) ? ((server.state_writable) ? "alert-info" : "alert-success") : "alert-error" ;
   div.addClass("alert " + cl) ;
 
-  div.append('<div class="server-name">' + server.name + '</div>') ;
+  var removeId = "remove-server-" + server.id ;
+  var divname = $('<div/>',
+    { class: "server-name",
+    });
+  var span = $('<span/>', {
+    id: removeId,
+    class: "ui-icon ui-icon-circle-minus",
+    style: "display: inline-block",
+    });
+  span.click(function() { onRemoveServer(server); });
+  divname.html(server.name + ' ');
+  divname.append(span);
+  div.append(divname);
   div.append('<div class="server-url">' + server.url + '</div>') ;
   div.append('<div class="server-state">' + server.state_info + '</div>') ;
+
 }
 
 function setServers(servers) {
@@ -34,6 +47,9 @@ function setServers(servers) {
   }
 }
 
+function destroyServer(server) {
+  $('#server-' + server.id).remove();
+}
 
 function addKeyDiv(key) {
   var div_keys = $("#keys") ;
@@ -67,5 +83,6 @@ function setKeys(keys) {
 self.port.on ("setServers", function(data) {setServers(data);});
 self.port.on ("setKeys", function(data) {setKeys(data);});
 self.port.on ("updateServer", function(data) {displayServer(data);});
+self.port.on ("removeServer", function(data) {destroyServer(data);});
 
 $("#reconnect").button().click(function() { self.port.emit("reconnect");});

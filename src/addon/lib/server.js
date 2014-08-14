@@ -26,8 +26,8 @@ function serverOnPostChallengesComplete(server, response) {
   console.log("/auth/challenges response: "+response.text);
   if (responseOk(response)) {
     var json = response.json;
-    server.writable = (json.writable == null) ? false : json.writable ;
-    var msg = "Connected "+(server.writable ? "and writable " : "") + " with " + json.number_of_rights + " rights" ;
+    server.state_writable = (json.writable == null) ? false : json.writable ;
+    var msg = "Connected "+(server.state_writable ? "and writable " : "") + " with " + json.number_of_rights + " rights" ;
     serverOk(server, msg);
   }
   else
@@ -119,5 +119,27 @@ function getTokens(server,keys) {
 function getTokensForServers() {
   options.store.servers.forEach(function(s) { getTokens(s,options.store.keys);});
 }
-
 exports.getTokensForServers = getTokensForServers;
+
+function addServer(data) {
+  var id = options.store.servers.reduce
+    (function (acc, s) { return (acc < s.id ? s.id : acc); }, 0);
+  var s = {
+    name: data.name,
+    url: data.url,
+    id: id + 1,
+    state_ok: false,
+    state_info: "Added",
+    state_writable: false,
+  };
+  options.store.servers.push(s);
+  getTokens(s, options.store.keys);
+}
+exports.addServer = addServer;
+
+function removeServer(server) {
+  var t = options.store.servers.filter(function (s) { return (s.id != server.id) });
+  options.store.servers = t;
+  options.send_to_tab("removeServer", server);
+}
+exports.removeServer = removeServer;
