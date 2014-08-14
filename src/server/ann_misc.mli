@@ -93,3 +93,12 @@ val string_of_opt : string option -> string
 (*/i==v=[String.string_of_opt]=1.0====*)
 
 val map_opt : ('a -> 'b) -> 'a option  -> 'b option
+
+(*i==v=[String.is_prefix]=1.0====*)
+(** [is_prefix pattern s] returns true if string [s] begins with [pattern].
+@@author Maxence Guesdon
+@@version 1.0
+@@cgname String.is_prefix*)
+val is_prefix : string -> string -> bool
+(*/i==v=[String.is_prefix]=1.0====*)
+

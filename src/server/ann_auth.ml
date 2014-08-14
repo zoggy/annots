@@ -165,15 +165,23 @@ let header req ~name =
   with _ -> ""
 
 let json_of_request req =
-    match header req ~name: "content-type" with
-    "application/jsonrequest"
-  | "application/json" -> J.from_string req#body
-  | _ -> bad_request "Expected JSON data"
+  let s = Ann_misc.strip_string (header req ~name: "content-type") in
+  if Ann_misc.is_prefix "application/json" s then
+    J.from_string req#body
+  else
+    (
+     List.iter (fun (h,s) -> prerr_endline (Printf.sprintf "%s: %s" h s)) req#headers;
+     bad_request "Expected JSON data"
+    )
 
 let auth cfg db req path =
   try
     match path, req#meth with
-      ["pubkeys"], `POST -> auth_get_challenges cfg db req (json_of_request req)
+      ["pubkeys"], `POST ->
+        prerr_endline "pubkeys|POST";
+        let r = auth_get_challenges cfg db req (json_of_request req) in
+        prerr_endline "replying";
+        r
     | ["challenges"], `POST -> auth_post_challenges cfg db req (json_of_request req)
     | _ -> Ann_http.result_not_found cfg "No service here."
   with

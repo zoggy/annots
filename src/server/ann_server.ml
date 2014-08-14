@@ -83,9 +83,9 @@ let past_cookie_date = "Wednesday, 09-Nov-99 23:12:40 GMT"
 
 let header_of_cookie_action = function
   Ann_http.Set_cookie (k, v) ->
-    ("Set-Cookie", Printf.sprintf "%s=%s, Path=/" k v)
+    ("Set-Cookie", Printf.sprintf "%s=%s; Path=/" k v)
 | Ann_http.Unset_cookie k ->
-    ("Set-Cookie", Printf.sprintf "%s=, Path=/, Expires=%s" k past_cookie_date)
+    ("Set-Cookie", Printf.sprintf "%s=; Path=/; Expires=%s" k past_cookie_date)
 
 let send_result res ouch =
   let body = res.Ann_http.body in
